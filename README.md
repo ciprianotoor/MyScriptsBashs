@@ -71,5 +71,3 @@ cd /home/cipriano/MyScriptsBashs
 git@github.com:ciprianotoor/MyScriptsBashs.git
 ```
 
-
-¿Quieres que haga esa versión lista para GitHub?
