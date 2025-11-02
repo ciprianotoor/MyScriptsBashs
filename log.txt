@@ -1,0 +1,6 @@
+2025-10-27 16:36:20 - Ejecutado: generar_alias.sh
+2025-10-27 16:36:53 - Ejecutado: datosproxmox.sh
+2025-10-27 16:37:03 - Ejecutado: Info.sh
+2025-10-27 16:37:42 - Ejecutado con sudo: montar.sh
+2025-10-27 16:38:01 - Ejecutado: setup-cpu-autogovernor.sh
+2025-10-27 16:38:49 - Ejecutado con sudo: usb-internet.sh.sh

@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Configuración
+INTERFACE=$(hostname)       # Cambia esto por tu interfaz Ethernet física
+WEBPORT=8006
+
+# Información básica
+HOSTNAME=$(hostname)
+KERNEL=$(uname -r)
+USER_LOGIN=$USER
+IP=$(ip -4 addr show "$INTERFACE" | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
+
+echo "========================================="
+echo "Servidor: $HOSTNAME"
+echo "Kernel: $KERNEL"
+echo
+echo "Usuario actual: $USER_LOGIN"
+echo "Interfaz: $INTERFACE"
+echo "IP local: $IP"
+echo "Acceso SSH: ssh $USER_LOGIN@$IP"
+echo "Web GUI Proxmox: https://$IP:$WEBPORT"
+echo
+echo "Último login:"
+last -n 1 -R $USER_LOGIN
+echo "========================================="

@@ -1,0 +1,49 @@
+#!/bin/bash
+# backup-config-proxmox.sh
+#
+# Script para crear un backup de configuraciones de Proxmox VE
+# Guardando los archivos en /mnt/pve/Data/Data-Respaldos/BackupProxmoxConf
+#
+# Uso:
+# sudo ./backup-config-proxmox.sh
+
+# Ruta de backups en el datastore
+BACKUP_DIR="/mnt/pve/Data/Data-Respaldos/BackupProxmoxConf"
+
+# Fecha y hora actual para evitar sobrescribir backups
+DATE=$(date +'%Y-%m-%d_%H-%M-%S')
+
+# Nombre del archivo de backup
+BACKUP_FILE="proxmox-config-$DATE.tar.gz"
+
+echo "==== Backup de configuración iniciado: $DATE ===="
+
+# Verificar que el directorio de backups existe
+if [ ! -d "$BACKUP_DIR" ]; then
+    echo "Creando carpeta de backups en $BACKUP_DIR..."
+    mkdir -p "$BACKUP_DIR"
+    if [ $? -ne 0 ]; then
+        echo "❌ ERROR: No se pudo crear la carpeta de backup. Abortando."
+        exit 1
+    fi
+else
+    echo "✔ Carpeta de backup encontrada: $BACKUP_DIR"
+fi
+
+# Crear el backup
+echo "Creando archivo $BACKUP_FILE ..."
+tar czf "$BACKUP_DIR/$BACKUP_FILE" \
+    /etc/pve/qemu-server \
+    /etc/pve/lxc \
+    /etc/network/interfaces \
+    /etc/pve
+
+if [ $? -eq 0 ]; then
+    echo "✔ Backup creado exitosamente"
+    echo "Ubicación: $BACKUP_DIR/$BACKUP_FILE"
+else
+    echo "❌ ERROR: Fallo al crear el backup"
+    exit 1
+fi
+
+echo "==== Backup finalizado ===="

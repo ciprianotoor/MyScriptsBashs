@@ -1,0 +1,24 @@
+#!/bin/bash
+
+echo "=== Interfaces USB detectadas ==="
+# Mostrar solo interfaces tipo USB (enx*) con su estado y MAC
+ip -o link show | grep '^.*enx' | awk -F': ' '{print NR-1 " - " $2 " | " $3}'
+
+# Pedir al usuario seleccionar la interfaz por nombre
+read -p "Introduce el nombre de la interfaz a levantar (ej: enx22b9168e2a26): " IFACE
+
+# Verificar que se introdujo algo
+if [ -z "$IFACE" ]; then
+    echo "No se ha introducido ninguna interfaz."
+    exit 1
+fi
+
+# Levantar la interfaz
+sudo ip link set "$IFACE" up
+
+# Solicitar IP vía DHCP
+sudo dhclient "$IFACE"
+
+# Mostrar el estado final
+echo "=== Estado de la interfaz $IFACE ==="
+ip a show "$IFACE"
