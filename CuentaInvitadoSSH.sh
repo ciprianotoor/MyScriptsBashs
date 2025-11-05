@@ -1,45 +1,78 @@
 #!/bin/bash
 # ==============================================
-# Crear usuario SSH "invitado" limitado a su home
+# Menú seguro para gestionar el usuario "invitado"
 # ==============================================
 
 USER_NAME="invitado"
 USER_HOME="/home/$USER_NAME"
 
-# 1️⃣ Crear usuario sin contraseña y sin sudo
-sudo adduser --disabled-password --gecos "" $USER_NAME
-sudo deluser $USER_NAME sudo 2>/dev/null
+while true; do
+    clear
+    echo "====================================="
+    echo "   👤 GESTIÓN SEGURA DEL USUARIO 'INVITADO'"
+    echo "====================================="
+    echo "1) Verificar si el usuario 'invitado' existe"
+    echo "2) Crear usuario 'invitado' (clave pública, limitado a su home)"
+    echo "3) Borrar usuario 'invitado'"
+    echo "0) Salir"
+    echo "-------------------------------------"
+    read -p "Seleccione una opción [0-3]: " OPCION
 
-# 2️⃣ Establecer shell restringido (rbash)
-sudo usermod -s /bin/rbash $USER_NAME
+    case $OPCION in
+        1)
+            if id "$USER_NAME" &>/dev/null; then
+                echo "✅ El usuario '$USER_NAME' existe."
+            else
+                echo "⚠️  El usuario '$USER_NAME' NO existe."
+            fi
+            ;;
+        2)
+            if id "$USER_NAME" &>/dev/null; then
+                echo "⚠️  El usuario '$USER_NAME' ya existe. No se creará de nuevo."
+            else
+                # Crear usuario
+                sudo adduser --disabled-password --gecos "" $USER_NAME
+                sudo deluser $USER_NAME sudo 2>/dev/null
 
-# 3️⃣ Crear carpeta .ssh
-sudo mkdir -p $USER_HOME/.ssh
-sudo chmod 700 $USER_HOME/.ssh
-sudo chown $USER_NAME:$USER_NAME $USER_HOME/.ssh
+                # Crear .ssh
+                sudo mkdir -p $USER_HOME/.ssh
+                sudo chmod 700 $USER_HOME/.ssh
+                sudo chown $USER_NAME:$USER_NAME $USER_HOME/.ssh
 
-# 4️⃣ Pedir clave pública
-echo "Por favor, pega la clave pública SSH del invitado y presiona ENTER:"
-read CLAVE_PUBLICA
+                # Pedir clave pública
+                echo "Por favor, pega la clave pública SSH del invitado y presiona ENTER:"
+                read CLAVE_PUBLICA
+                echo $CLAVE_PUBLICA | sudo tee $USER_HOME/.ssh/authorized_keys >/dev/null
+                sudo chmod 600 $USER_HOME/.ssh/authorized_keys
+                sudo chown $USER_NAME:$USER_NAME $USER_HOME/.ssh/authorized_keys
 
-# 5️⃣ Guardar la clave pública
-echo $CLAVE_PUBLICA | sudo tee $USER_HOME/.ssh/authorized_keys >/dev/null
-sudo chmod 600 $USER_HOME/.ssh/authorized_keys
-sudo chown $USER_NAME:$USER_NAME $USER_HOME/.ssh/authorized_keys
+                # Limitar shell a rbash
+                sudo usermod -s /bin/rbash $USER_NAME
 
-# 6️⃣ Limitar el home
-# Crear enlaces simbólicos solo si necesita acceso a ciertos comandos, por ejemplo ls, cat
-sudo mkdir -p $USER_HOME/bin
-sudo chown $USER_NAME:$USER_NAME $USER_HOME/bin
-# Agregar binarios que puede usar (opcional)
-# cp /bin/ls $USER_HOME/bin/
-# cp /bin/cat $USER_HOME/bin/
-
-# 7️⃣ Cambiar PATH para usuario
-echo 'PATH=$HOME/bin' | sudo tee -a $USER_HOME/.bash_profile >/dev/null
-echo 'export PATH' | sudo tee -a $USER_HOME/.bash_profile >/dev/null
-
-echo "✅ Usuario '$USER_NAME' creado con éxito."
-echo "🔹 Acceso restringido a su home, sin sudo ni acceso a / ni /root."
-echo "🔹 Conectarse vía SSH con su clave privada correspondiente:"
-echo "ssh $USER_NAME@<IP_DEL_SERVIDOR>"
+                echo "✅ Usuario '$USER_NAME' creado con éxito y limitado a su home."
+            fi
+            ;;
+        3)
+            if id "$USER_NAME" &>/dev/null; then
+                read -p "¿Está seguro de eliminar el usuario '$USER_NAME'? (s/n): " CONF
+                if [[ "$CONF" == "s" || "$CONF" == "S" ]]; then
+                    sudo deluser --remove-home $USER_NAME
+                    echo "🗑️ Usuario '$USER_NAME' eliminado."
+                else
+                    echo "❎ Operación cancelada."
+                fi
+            else
+                echo "⚠️ Usuario '$USER_NAME' no existe."
+            fi
+            ;;
+        0)
+            echo "👋 Saliendo..."
+            exit 0
+            ;;
+        *)
+            echo "❌ Opción inválida."
+            ;;
+    esac
+    echo ""
+    read -p "Presione ENTER para continuar..."
+done
