@@ -137,6 +137,43 @@ desmontar_dvd() {
     echo
 }
 
+# Expulsar DVD/CD
+expulsar_dvd() {
+    # Buscar dispositivos ópticos (sr*)
+    mapfile -t dvd_list < <(lsblk -ln -o NAME,TYPE | awk '$2=="rom"{print $1}')
+
+    if [ ${#dvd_list[@]} -eq 0 ]; then
+        echo "❌ No se encontró unidad óptica."
+        echo
+        return
+    fi
+
+    echo "=== Unidades ópticas detectadas ==="
+    i=1
+    for dev in "${dvd_list[@]}"; do
+        echo "$i) /dev/$dev"
+        ((i++))
+    done
+
+    read -p "Seleccione la unidad a expulsar: " choice
+    device="/dev/${dvd_list[$((choice-1))]}"
+
+    if [ ! -b "$device" ]; then
+        echo "❌ Selección inválida."
+        echo
+        return
+    fi
+
+    echo "🔄 Expulsando $device ..."
+    if sudo eject "$device"; then
+        echo "🟢 Expulsado correctamente."
+    else
+        echo "⚠️ Error al expulsar. Intentando forzar..."
+        sudo eject -f "$device" && echo "🟢 Expulsado forzado correctamente." || echo "❌ Falló la expulsión."
+    fi
+    echo
+}
+
 ### Menú principal
 while true; do
     echo "========= GESTOR DE DISCOS ========="
@@ -147,7 +184,8 @@ while true; do
     echo "5) Ver información SMART"
     echo "6) Montar DVD/CD"
     echo "7) Desmontar DVD/CD"
-    echo "8) Salir"
+    echo "8) Expulsar DVD/CD"
+    echo "9) Salir"
     echo "===================================="
     read -p "Seleccione una opción: " opcion
     echo
@@ -160,7 +198,8 @@ while true; do
         5) info_smart ;;
         6) montar_dvd ;;
         7) desmontar_dvd ;;
-        8) exit 0 ;;
+        8) expulsar_dvd ;;
+        9) exit 0 ;;
         *) echo "❌ Opción inválida" ;;
     esac
 done
