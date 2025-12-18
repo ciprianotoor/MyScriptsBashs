@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#Es un buen script
 IFACE="wlp2s0"
 
 function activar() {
