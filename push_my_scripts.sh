@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # push_my_scripts.sh - Sincroniza MyScriptsBashs con GitHub automáticamente
 # Mejoras: detección automática de ssh-agent, manejo de errores, mensajes claros
-# Incluye apertura automática en Microsoft Edge
+# Adaptado para abrir el repositorio desde Windows si se ejecuta por SSH
 
 set -euo pipefail
 
@@ -67,14 +67,23 @@ function sync_changes() {
 }
 
 # ------------------------------
-# Función: abrir GitHub en Microsoft Edge
+# Función: abrir GitHub en Edge o imprimir URL
 # ------------------------------
-function open_github_in_edge() {
-    if command -v microsoft-edge >/dev/null 2>&1; then
-        microsoft-edge "https://github.com/ciprianotoor/MyScriptsBashs" >/dev/null 2>&1 &
-        echo "🌐 Repositorio abierto en Microsoft Edge."
+function open_github() {
+    # Detecta si estamos conectados por SSH
+    if [ -n "${SSH_CONNECTION:-}" ]; then
+        # Imprime la URL para abrirla en Windows
+        echo "🌐 Abre este enlace en tu navegador Windows:"
+        echo "https://github.com/ciprianotoor/MyScriptsBashs"
     else
-        echo "⚠️ Microsoft Edge no está instalado o no se encuentra en PATH."
+        # Intentar abrir en Edge si es local (Linux con GUI)
+        if command -v microsoft-edge >/dev/null 2>&1; then
+            microsoft-edge "https://github.com/ciprianotoor/MyScriptsBashs" >/dev/null 2>&1 &
+            echo "🌐 Repositorio abierto en Microsoft Edge."
+        else
+            echo "⚠️ Microsoft Edge no está instalado o no se encuentra en PATH."
+            echo "🌐 URL: https://github.com/ciprianotoor/MyScriptsBashs"
+        fi
     fi
 }
 
@@ -84,4 +93,4 @@ function open_github_in_edge() {
 ensure_ssh_agent
 ensure_repo
 sync_changes
-open_github_in_edge
+open_github
