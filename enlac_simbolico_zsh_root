@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script para enlazar .bashrc de cipriano a root
+# Script para enlazar .zshrc de cipriano a root
 
 # Verificar que se ejecute como root
 if [[ $EUID -ne 0 ]]; then
@@ -8,12 +8,12 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 # Rutas
-SRC="/home/cipriano/.bashrc"
-DST="/root/.bashrc"
+SRC="/home/cipriano/.zshrc"
+DST="/root/.zshrc"
 
-# Hacer backup si .bashrc de root existe
+# Hacer backup si .zshrc de root existe
 if [[ -e "$DST" ]]; then
-    echo "Haciendo backup de /root/.bashrc a /root/.bashrc.backup"
+    echo "Haciendo backup de /root/.zshrc a /root/.zshrc.backup"
     mv "$DST" "${DST}.backup"
 fi
 
@@ -21,4 +21,4 @@ fi
 echo "Creando enlace simbólico: $DST -> $SRC"
 ln -s "$SRC" "$DST"
 
-echo "Listo. Ahora /root/.bashrc apunta a /home/cipriano/.bashrc"
+echo "Listo. Ahora /root/.zshrc apunta a /home/cipriano/.zshrc"
