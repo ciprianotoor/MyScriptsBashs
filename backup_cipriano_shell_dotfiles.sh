@@ -3,7 +3,7 @@
 # Respalda todos los dotfiles de Bash y Zsh de cipriano
 # Compatible con sh y bash
 
-USER_HOME="/home/cipriano"
+USER_HOME="/home/cipriano/MyScriptsBashs"
 DATE=$(date +%Y%m%d_%H%M%S)
 BACKUP_DIR="$USER_HOME/dotfiles_backup_$DATE"
 
