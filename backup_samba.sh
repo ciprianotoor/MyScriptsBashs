@@ -2,7 +2,7 @@
 # backup_samba.sh
 # Script mejorado para backup de /etc/samba/smb.conf
 
-DESTINO="/home/cipriano"
+DESTINO="/home/cipriano/MyScriptsBashs"
 MAX_BACKUPS=5  # Mantener solo los últimos 5 backups
 
 # Función para listar backups

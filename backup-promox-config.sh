@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BACKUP_DIR="/home/cipriano/backup-proxmox-config"
+BACKUP_DIR="/home/cipriano/MyScriptsBashs
 MAX_BACKUPS=7
 
 # Función para listar backups con números
