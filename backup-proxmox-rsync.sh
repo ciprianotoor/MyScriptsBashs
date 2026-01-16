@@ -5,7 +5,7 @@
 # con rsync y menú visual
 # ==========================================
 
-BACKUP_ROOT="/mnt/datos/compartido/respaldo-proxmox"
+BACKUP_ROOT="/home/cipriano/respaldo-proxmox"
 MAX_BACKUPS=7
 
 mkdir -p "$BACKUP_ROOT"

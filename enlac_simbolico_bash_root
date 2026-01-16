@@ -1,0 +1,24 @@
+#!/bin/bash
+# Script para enlazar .bashrc de cipriano a root
+
+# Verificar que se ejecute como root
+if [[ $EUID -ne 0 ]]; then
+   echo "Por favor, ejecuta este script como root (sudo)." 
+   exit 1
+fi
+
+# Rutas
+SRC="/home/cipriano/.bashrc"
+DST="/root/.bashrc"
+
+# Hacer backup si .bashrc de root existe
+if [[ -e "$DST" ]]; then
+    echo "Haciendo backup de /root/.bashrc a /root/.bashrc.backup"
+    mv "$DST" "${DST}.backup"
+fi
+
+# Crear el enlace simbólico
+echo "Creando enlace simbólico: $DST -> $SRC"
+ln -s "$SRC" "$DST"
+
+echo "Listo. Ahora /root/.bashrc apunta a /home/cipriano/.bashrc"

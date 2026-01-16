@@ -4,3 +4,4 @@
 2025-10-27 16:37:42 - Ejecutado con sudo: montar.sh
 2025-10-27 16:38:01 - Ejecutado: setup-cpu-autogovernor.sh
 2025-10-27 16:38:49 - Ejecutado con sudo: usb-internet.sh.sh
+2026-01-15 18:20:00 - Ejecutado con sudo: AutoDotfileRootProxmox.sh
