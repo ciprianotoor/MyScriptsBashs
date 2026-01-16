@@ -1,0 +1,103 @@
+#!/bin/bash
+
+# 99-proxmox-status estilo Proxmox en español, con LAN (eno1) y VPN (Tailscale) separadas
+
+# Colores
+RED='\e[31m'
+GREEN='\e[32m'
+CYAN='\e[36m'
+BOLD='\e[1m'
+RESET='\e[0m'
+
+# Variables básicas
+HOSTNAME=$(hostname)
+DATE=$(date '+%Y-%m-%d %H:%M:%S')
+UPTIME=$(uptime -p | sed 's/up //')
+
+# Interfaces de red
+IP_LAN=$(hostname -i)
+IP_VPN=$(tailscale ip -4 2>/dev/null)
+[ -z "$IP_VPN" ] && IP_VPN="No conectada"
+
+INTERFACE_LAN="eno1"
+GATEWAY=$(ip route | grep '^default' | awk '{print $3}')
+
+# Sistema
+LOAD=$(uptime | awk -F 'load average:' '{print $2}' | sed 's/ //g')
+CPU=$(top -bn1 | grep "Cpu(s)" | awk '{print $2 + $4}')
+RAM_TOTAL=$(free -m | awk '/Mem:/ {print $2}')
+RAM_USADA=$(free -m | awk '/Mem:/ {print $3}')
+RAM_PORC=$(( RAM_USADA * 100 / RAM_TOTAL ))
+
+# Función barras
+draw_bar() {
+    local PERCENT=$1
+    local LENGTH=20
+    local FILLED=$(( PERCENT * LENGTH / 100 ))
+    local EMPTY=$(( LENGTH - FILLED ))
+    local BAR="${GREEN}$(printf '█%.0s' $(seq 1 $FILLED))${RED}$(printf '█%.0s' $(seq 1 $EMPTY))${RESET}"
+    echo -e "$BAR"
+}
+
+# Almacenamiento
+get_disk_usage() {
+  local MOUNTPOINT=$1
+  local USED=$(df -h "$MOUNTPOINT" | awk 'NR==2 {print $3}')
+  local TOTAL=$(df -h "$MOUNTPOINT" | awk 'NR==2 {print $2}')
+  local PERC=$(df -h "$MOUNTPOINT" | awk 'NR==2 {print $5}' | tr -d '%')
+  echo "$USED / $TOTAL ($PERC%)"
+  echo "$PERC"
+}
+
+HOME_USADO=$(get_disk_usage /home)
+HOME_PERC=$(echo "$HOME_USADO" | tail -n1)
+HOME_USADO=$(echo "$HOME_USADO" | head -n1)
+
+LOCAL_USADO=$(get_disk_usage /var/lib/vz)
+LOCAL_PERC=$(echo "$LOCAL_USADO" | tail -n1)
+LOCAL_USADO=$(echo "$LOCAL_USADO" | head -n1)
+
+# LVM
+LVM_TOTAL=$(lvs --noheadings -o lv_size --units g --nosuffix local-lvm | awk '{sum+=$1} END{print sum}')
+LVM_FREE=$(lvs --noheadings -o lv_free --units g --nosuffix local-lvm | awk '{sum+=$1} END{print sum}')
+LVM_USADA=$(awk "BEGIN {printf \"%.2fG\", $LVM_TOTAL - $LVM_FREE}")
+LVM_PORC=$(( ( ($LVM_TOTAL - $LVM_FREE) * 100 ) / $LVM_TOTAL ))
+
+# Encabezado
+echo -e "${BOLD}${CYAN}══════════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${BOLD}${CYAN}══════════════════  PROXMOX VE :: $HOSTNAME    ══════════════════════════${RESET}"
+echo -e "${BOLD}${CYAN}══════════════════════════════════════════════════════════════════════${RESET}"
+
+# Fecha y uptime
+echo -e "🕒 Fecha y hora     : $DATE"
+echo -e "⏱ Tiempo activo     : $UPTIME"
+
+# Redes
+echo -e "🌐 Red LAN (eno1)   : $IP_LAN"
+echo -e "🔒 Red VPN (Tailscale): $IP_VPN"
+echo -e "🚪 Gateway           : $GATEWAY"
+
+# Carga del sistema
+echo -e "📊 Promedio carga    : $LOAD"
+echo -e "🧠 Uso CPU           : ${CPU}%"
+echo -e "💾 RAM               : ${RAM_USADA}/${RAM_TOTAL} MB (${RAM_PORC}%) $(draw_bar $RAM_PORC)"
+
+# Almacenamiento
+echo -e "📦 Almacenamiento:"
+echo -e "   - Home            : $HOME_USADO $(draw_bar $HOME_PERC)"
+echo -e "   - local           : $LOCAL_USADO $(draw_bar $LOCAL_PERC)"
+echo -e "   - local-lvm       : $LVM_USADA ($LVM_PORC%) $(draw_bar $LVM_PORC)"
+
+# Footer
+echo -e "${BOLD}${CYAN}══════════════════════════════════════════════════════════════════════${RESET}"
+# ... después de almacenamiento
+# Comprobar actualizaciones
+UPDATES=$(apt list --upgradeable 2>/dev/null | grep -v "Listing..." | wc -l)
+if [ "$UPDATES" -gt 0 ]; then
+    echo -e "⬆️ Actualizaciones pendientes : ${RED}$UPDATES paquetes${RESET}"
+else
+    echo -e "⬆️ Actualizaciones pendientes : ${GREEN}0 paquetes${RESET}"
+fi
+
+# Footer
+echo -e "${BOLD}${CYAN}══════════════════════════════════════════════════════════════════════${RESET}"
