@@ -4,4 +4,4 @@
 # Instala la herramienta tty-clock (reloj en terminal)
 #sudo apt install tty-clock -y
 
-tty-clock -c -s -r -C 2 -b
+tty-clock -c -s -r -C 2 -b -t
