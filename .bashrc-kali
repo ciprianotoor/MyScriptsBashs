@@ -1,0 +1,69 @@
+# ~/.bashrc — Prompt estilo Kali azul
+
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+# Historial
+HISTCONTROL=ignoreboth
+HISTSIZE=1000
+HISTFILESIZE=2000
+shopt -s histappend
+shopt -s checkwinsize
+
+# Variables de chroot (no afecta, solo placeholder)
+debian_chroot="KALI"
+
+# Colores
+force_color_prompt=yes
+
+if [ -n "$force_color_prompt" ]; then
+    VIRTUAL_ENV_DISABLE_PROMPT=1
+
+    user_host_color='\[\033[1;34m\]'  # azul
+    path_color='\[\033[0;32m\]'       # verde
+    symbol_color='\[\033[1;36m\]'     # cyan
+    prompt_symbol=㉿
+
+    if [ "$EUID" -eq 0 ]; then
+        user_host_color='\[\033[1;94m\]'  # azul brillante para root
+        path_color='\[\033[1;31m\]'       # rojo para root
+    fi
+
+    PS1="$user_host_color┌──(KALI)$prompt_symbol\u@\h-$path_color\w\n$symbol_color└─\$ \[\033[0m\]"
+else
+    PS1='${debian_chroot:+(KALI)}\u@\h:\w\$ '
+fi
+
+unset force_color_prompt
+unset user_host_color path_color symbol_color prompt_symbol
+
+# Título del terminal
+case "$TERM" in
+xterm*|rxvt*|alacritty|gnome*)
+    PS1="\[\e]0;KALI: \w\a\]$PS1"
+;;
+esac
+
+# Salto de línea antes del prompt
+PROMPT_COMMAND='echo'
+
+# Colores en ls, grep, diff
+if [ -x /usr/bin/dircolors ]; then
+    eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    alias grep='grep --color=auto'
+    alias diff='diff --color=auto'
+fi
+
+# Alias útiles
+alias ll='ls -lh'
+alias la='ls -A'
+alias l='ls -CF'
+alias cls='clear'
+
+# Autocompletado
+if ! shopt -oq posix; then
+    [ -f /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
+fi
