@@ -4,7 +4,7 @@
 # ==========================================
 alias perfil='nano ~/.zshrc'
 alias perfilbash='nano ~/.bashrc'
-
+alias veralias='cat MyScriptsBashs/aliases.sh'
 # ===== Navegación =====
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -252,3 +252,12 @@ if command -v fzf >/dev/null 2>&1; then
 fi
 ### este bash
 alias perfilaliases='nano /home/cipriano/MyScriptsBashs/aliases.sh'
+# ##### Sesiones persistentes tmux
+alias SesionNuevaTmux='tmux new -s trabajo'       # Crear nueva sesión llamada "trabajo"
+alias SesionRetornarTmux='tmux attach -t trabajo' # Volver a la sesión "trabajo"
+alias ListarSesionesTmux='tmux ls'               # Listar todas las sesiones activas
+alias DetenerSesionTmux='tmux kill-session -t trabajo' # Cerrar la sesión "trabajo"
+alias DividirVerticalTmux='tmux split-window -v'  # Dividir la ventana verticalmente
+alias DividirHorizontalTmux='tmux split-window -h' # Dividir la ventana horizontalmente
+alias CambiarVentanaTmux='tmux select-window -t'  # Cambiar a otra ventana (añadir número)
+alias RenombrarVentanaTmux='tmux rename-window'   # Renombrar ventana actual
