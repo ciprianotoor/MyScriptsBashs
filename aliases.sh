@@ -116,8 +116,8 @@ alias espacio='du -sh /* 2>/dev/null'
 alias uptime='uptime -p'
 alias kernel='uname -r'
 alias osinfo='hostnamectl'
-alias rebootnow='sudo reboot'
-alias shutdownnow='sudo poweroff'
+alias reiniciar='sudo reboot'
+alias apagar='sudo poweroff'
 
 # ========================
 # PROCESOS
@@ -216,6 +216,7 @@ alias revote='source ~/.zshrc'
 alias path='echo $PATH | tr ":" "\n"'
 alias now='date "+%Y-%m-%d %H:%M:%S"'
 alias weather='curl wttr.in'
+alias veraliases='cat /home/cipriano/MyScriptsBashs/aliases.sh'
 # ========================
 # LSD (si existe)
 # ========================
@@ -250,4 +251,4 @@ if command -v fzf >/dev/null 2>&1; then
   alias fd='find . -type f | fzf'
 fi
 ### este bash
-alias perfilaliases'nano /home/cipriano/MyScriptsBashs/aliases.sh'
+alias perfilaliases='nano /home/cipriano/MyScriptsBashs/aliases.sh'

@@ -1,6 +1,6 @@
 #!/bin/bash
 # Script de instalación y configuración de auto-governor para Proxmox
-
+sudo su
 # 1️⃣ Actualizar repos y paquetes
 echo "Actualizando repositorios..."
 apt update -y
