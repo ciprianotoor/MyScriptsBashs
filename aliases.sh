@@ -212,7 +212,7 @@ alias gl='git log --oneline --graph --decorate'
 alias cls='clear'
 alias editar_alias='nano ~/MyScriptsBashs/aliases.sh'
 alias reload_alias='source ~/MyScriptsBashs/aliases.sh'
-alias reloadz='source ~/.zshrc'
+alias revote='source ~/.zshrc'
 alias path='echo $PATH | tr ":" "\n"'
 alias now='date "+%Y-%m-%d %H:%M:%S"'
 alias weather='curl wttr.in'
@@ -249,3 +249,5 @@ if command -v fzf >/dev/null 2>&1; then
   alias fh='history | fzf'
   alias fd='find . -type f | fzf'
 fi
+### este bash
+alias perfilaliases'nano /home/cipriano/MyScriptsBashs/aliases.sh'
