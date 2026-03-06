@@ -51,7 +51,7 @@ alias stopvm='qm stop'
 # ===== Actualización =====
 alias actualizar='sudo apt update && sudo apt full-upgrade -y'
 alias limpiar='sudo apt autoremove -y && sudo apt clean'
-
+alias actualiza='sudo nala update && sudo nala upgrade'
 # ===== Seguridad =====
 alias permisos='chmod +x'
 alias propietario='chown'
