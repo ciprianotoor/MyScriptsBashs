@@ -1,80 +1,11 @@
-#!/usr/bin/env bash
 # ==========================================
-# ALIASES PROFESIONALES - CIPRIANO
+# 🔥 ALIASES PRO - CIPRIANO (LIMPIO ZSH)
 # ==========================================
-alias perfil='nano ~/.zshrc'
-alias perfilbash='nano ~/.bashrc'
-alias veralias='cat MyScriptsBashs/aliases.sh'
-# ===== Navegación =====
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-alias home='cd ~'
-
-# ===== Listado =====
-alias ls='ls --color=auto'
-alias ll='ls -lh'
-alias la='ls -lah'
-alias lt='ls -lh --sort=time'
-alias lsize='du -sh * | sort -h'
-
-# ===== Sistema =====
-alias cpu='lscpu'
-alias mem='free -h'
-alias disk='lsblk -f'
-alias espacio='df -h'
-alias uso='du -sh *'
-alias uptime='uptime -p'
-alias kernel='uname -r'
-
-# ===== Red =====
-alias puertos='ss -tuln'
-alias conexiones='ss -tunap'
-alias miip='ip -4 addr show'
-alias gateway='ip route'
-alias pingg='ping 8.8.8.8'
-
-# ===== Procesos =====
-alias psg='ps aux | grep -v grep | grep -i'
-alias top10='ps aux --sort=-%mem | head'
-alias kill9='kill -9'
-
-# ===== Proxmox =====
-alias pvev='pveversion'
-alias vms='qm list'
-alias cts='pct list'
-alias reiniciarvm='qm reboot'
-alias apagarvm='qm shutdown'
-alias startvm='qm start'
-alias stopvm='qm stop'
-
-# ===== Actualización =====
-alias actualizar='sudo apt update && sudo apt full-upgrade -y'
-alias limpiar='sudo apt autoremove -y && sudo apt clean'
-alias actualiza='sudo nala update && sudo nala upgrade'
-# ===== Seguridad =====
-alias permisos='chmod +x'
-alias propietario='chown'
-alias puertos_abiertos='ss -tulwn'
-
-# ===== Git =====
-alias gs='git status'
-alias ga='git add .'
-alias gc='git commit -m'
-alias gp='git push'
-alias gl='git pull'
-alias gb='git branch'
-
-# ===== Utilidad =====
-alias cls='clear'
-alias recargar='source ~/.zshrc'
-alias editar_alias='nano ~/MyScriptsBashs/aliases.sh'
-alias reload_alias='source ~/MyScriptsBashs/aliases.sh'
-#!/usr/bin/env bash
-# ==========================================================
-# ALIASES PRO - CIPRIANO (SYSADMIN / PROXMOX / SERVIDOR)
-# ==========================================================
-
+#   Instalar
+# ==========================================
+#sudo apt update && sudo apt install -y \
+#zsh git curl wget htop tree iproute2 net-tools dnsutils traceroute lsof \
+#bat fzf lsd nala tmux neovim ncdu btop ripgrep fd-find
 # ========================
 # NAVEGACIÓN
 # ========================
@@ -87,138 +18,7 @@ alias rootdir='cd /'
 alias back='cd -'
 
 # ========================
-# LISTADO Y ARCHIVOS
-# ========================
-alias ls='ls --color=auto'
-alias ll='ls -lh'
-alias la='ls -lah'
-alias lt='ls -lht'
-alias ltr='ls -lhtr'
-alias lsize='du -sh * 2>/dev/null | sort -h'
-alias tree='tree -C'
-alias mkdirp='mkdir -p'
-alias rmf='rm -rf'
-alias c='cat'
-alias v='less'
-alias h='head'
-alias t='tail'
-alias tf='tail -f'
-
-# ========================
-# SISTEMA
-# ========================
-alias cpu='lscpu'
-alias mem='free -h'
-alias disk='lsblk -f'
-alias dfh='df -h'
-alias mounts='mount | column -t'
-alias espacio='du -sh /* 2>/dev/null'
-alias uptime='uptime -p'
-alias kernel='uname -r'
-alias osinfo='hostnamectl'
-alias reiniciar='sudo reboot'
-alias apagar='sudo poweroff'
-
-# ========================
-# PROCESOS
-# ========================
-alias psa='ps aux'
-alias psg='ps aux | grep -i'
-alias psmem='ps aux --sort=-%mem | head'
-alias pscpu='ps aux --sort=-%cpu | head'
-alias topmem='top -o %MEM'
-alias topcpu='top -o %CPU'
-alias kill9='kill -9'
-alias portsused='lsof -i -P -n'
-
-# ========================
-# RED
-# ========================
-alias miip='ip -4 addr'
-alias ipfull='ip a'
-alias gateway='ip route'
-alias puertos='ss -tuln'
-alias conexiones='ss -tunap'
-alias listening='ss -lntup'
-alias pingg='ping 8.8.8.8'
-alias tracer='traceroute 8.8.8.8'
-alias dns='cat /etc/resolv.conf'
-
-# ========================
-# PROXMOX VE
-# ========================
-alias pvev='pveversion'
-alias vms='qm list'
-alias vmstart='qm start'
-alias vmstop='qm stop'
-alias vmreboot='qm reboot'
-alias vmconfig='qm config'
-alias cts='pct list'
-alias ctstart='pct start'
-alias ctstop='pct stop'
-alias ctreboot='pct reboot'
-alias ctconfig='pct config'
-alias storages='pvesm status'
-alias nodes='pvecm nodes'
-alias cluster='pvecm status'
-
-# ========================
-# APT / PAQUETES
-# ========================
-alias update='sudo apt update'
-alias upgrade='sudo apt full-upgrade -y'
-alias install='sudo apt install'
-alias remove='sudo apt remove'
-alias purge='sudo apt purge'
-alias autoremove='sudo apt autoremove -y'
-alias cleanapt='sudo apt clean'
-alias search='apt search'
-alias policy='apt policy'
-
-# ========================
-# LOGS
-# ========================
-alias logs='journalctl -xe'
-alias logtoday='journalctl --since today'
-alias logboot='journalctl -b'
-alias dmesglog='dmesg -T | less'
-alias authlog='sudo journalctl -u ssh'
-alias syslog='sudo tail -f /var/log/syslog'
-
-# ========================
-# SSH
-# ========================
-alias sshconfig='nano ~/.ssh/config'
-alias knownhosts='nano ~/.ssh/known_hosts'
-alias reloadssh='sudo systemctl restart ssh'
-alias sshstatus='systemctl status ssh'
-
-# ========================
-# GIT
-# ========================
-alias gs='git status'
-alias ga='git add .'
-alias gaa='git add -A'
-alias gc='git commit -m'
-alias gca='git commit -am'
-alias gp='git push'
-alias gpl='git pull'
-alias gb='git branch'
-alias gl='git log --oneline --graph --decorate'
-
-# ========================
-# UTILIDADES
-# ========================
-alias cls='clear'
-alias editar_alias='nano ~/MyScriptsBashs/aliases.sh'
-alias reload_alias='source ~/MyScriptsBashs/aliases.sh'
-alias revote='source ~/.zshrc'
-alias path='echo $PATH | tr ":" "\n"'
-alias now='date "+%Y-%m-%d %H:%M:%S"'
-alias weather='curl wttr.in'
-alias veraliases='cat /home/cipriano/MyScriptsBashs/aliases.sh'
-# ========================
-# LSD (si existe)
+# LISTADO
 # ========================
 if command -v lsd >/dev/null 2>&1; then
   alias ls='lsd'
@@ -232,15 +32,98 @@ else
   alias lt='ls -lht --color=auto'
 fi
 
+alias ltr='ls -lhtr'
 alias lsize='du -sh * 2>/dev/null | sort -h'
 alias tree='tree -C'
 
 # ========================
-# BATCAT (FORZADO)
+# SISTEMA
 # ========================
+alias cpu='lscpu'
+alias mem='free -h'
+alias disk='lsblk -f'
+alias dfh='df -h'
+alias mounts='mount | column -t'
+alias uptime='uptime -p'
+alias kernel='uname -r'
+alias osinfo='hostnamectl'
 
+# ========================
+# PROCESOS
+# ========================
+alias psa='ps aux'
+alias psg='ps aux | grep -i'
+alias psmem='ps aux --sort=-%mem | head'
+alias pscpu='ps aux --sort=-%cpu | head'
+alias kill9='kill -9'
+
+# ========================
+# RED
+# ========================
+alias miip='ip -4 addr'
+alias gateway='ip route'
+alias puertos='ss -tuln'
+alias conexiones='ss -tunap'
+alias pingg='ping 8.8.8.8'
+
+# ========================
+# PROXMOX
+# ========================
+alias pvev='pveversion'
+alias vms='qm list'
+alias vmstart='qm start'
+alias vmstop='qm stop'
+alias vmreboot='qm reboot'
+alias vmconfig='qm config'
+
+alias cts='pct list'
+alias ctstart='pct start'
+alias ctstop='pct stop'
+alias ctreboot='pct reboot'
+alias ctconfig='pct config'
+
+alias storages='pvesm status'
+alias nodes='pvecm nodes'
+alias cluster='pvecm status'
+
+# ========================
+# APT
+# ========================
+alias update='sudo apt update'
+alias upgrade='sudo apt full-upgrade -y'
+alias autoremove='sudo apt autoremove -y'
+alias cleanapt='sudo apt clean'
+
+# ========================
+# LOGS
+# ========================
+alias logs='journalctl -xe'
+alias logtoday='journalctl --since today'
+alias logboot='journalctl -b'
+
+# ========================
+# GIT
+# ========================
+alias gs='git status'
+alias ga='git add .'
+alias gaa='git add -A'
+alias gc='git commit -m'
+alias gp='git push'
+alias gpl='git pull'
+
+# ========================
+# UTILIDAD
+# ========================
+alias cls='clear'
+alias recargar='source ~/.zshrc'
+alias editar_alias='nano ~/MyScriptsBashs/aliases.sh'
+alias reload_alias='source ~/MyScriptsBashs/aliases.sh'
+alias now='date "+%Y-%m-%d %H:%M:%S"'
+
+# ========================
+# BATCAT
+# ========================
 alias cat='batcat'
-
 
 # ========================
 # FZF
@@ -248,16 +131,12 @@ alias cat='batcat'
 if command -v fzf >/dev/null 2>&1; then
   alias ff='fzf'
   alias fh='history | fzf'
-  alias fd='find . -type f | fzf'
 fi
-### este bash
-alias perfilaliases='nano /home/cipriano/MyScriptsBashs/aliases.sh'
-# ##### Sesiones persistentes tmux
-alias SesionNuevaTmux='tmux new -s trabajo'       # Crear nueva sesión llamada "trabajo"
-alias SesionRetornarTmux='tmux attach -t trabajo' # Volver a la sesión "trabajo"
-alias ListarSesionesTmux='tmux ls'               # Listar todas las sesiones activas
-alias DetenerSesionTmux='tmux kill-session -t trabajo' # Cerrar la sesión "trabajo"
-alias DividirVerticalTmux='tmux split-window -v'  # Dividir la ventana verticalmente
-alias DividirHorizontalTmux='tmux split-window -h' # Dividir la ventana horizontalmente
-alias CambiarVentanaTmux='tmux select-window -t'  # Cambiar a otra ventana (añadir número)
-alias RenombrarVentanaTmux='tmux rename-window'   # Renombrar ventana actual
+
+# ========================
+# TMUX
+# ========================
+alias tn='tmux new -s trabajo'
+alias ta='tmux attach -t trabajo'
+alias tls='tmux ls'
+alias tk='tmux kill-session -t trabajo'
