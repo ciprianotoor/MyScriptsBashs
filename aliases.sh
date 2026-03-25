@@ -140,3 +140,63 @@ alias tn='tmux new -s trabajo'
 alias ta='tmux attach -t trabajo'
 alias tls='tmux ls'
 alias tk='tmux kill-session -t trabajo'
+
+# ========================
+# 🔐 SSH ADMIN / DEBUG
+# ========================
+
+# --- Estado del servicio ---
+alias ssh-status='systemctl status ssh'
+alias ssh-active='systemctl is-active ssh'
+alias ssh-restart='sudo systemctl restart ssh'
+alias ssh-port='ss -tuln | grep ssh'
+
+# --- Conexiones ---
+alias ssh-users='who'
+alias ssh-connections='ss -tnp | grep ssh'
+alias ssh-ps='ps aux | grep [s]shd'
+
+# --- Claves SSH ---
+alias ssh-pub='cat ~/.ssh/*.pub 2>/dev/null'
+alias ssh-priv='ls -l ~/.ssh | grep id_'
+alias ssh-auth='cat ~/.ssh/authorized_keys 2>/dev/null'
+alias ssh-root-auth='sudo cat /root/.ssh/authorized_keys 2>/dev/null'
+
+# --- Generar claves ---
+alias ssh-keygen-ed25519='ssh-keygen -t ed25519 -C "cipriano@$(hostname)"'
+alias ssh-keygen-rsa='ssh-keygen -t rsa -b 4096 -C "cipriano@$(hostname)"'
+
+# --- Copiar clave pública a servidor ---
+alias ssh-copy='ssh-copy-id'
+
+# --- Carpeta SSH ---
+alias ssh-ls='ls -lah ~/.ssh'
+alias ssh-perm='ls -l ~/.ssh'
+
+# --- Logs ---
+alias ssh-log='journalctl -u ssh --no-pager | tail -n 50'
+alias ssh-logf='journalctl -u ssh -f'
+alias ssh-ok='journalctl -u ssh | grep "Accepted"'
+alias ssh-fail='journalctl -u ssh | grep "Failed"'
+
+# --- Configuración ---
+alias ssh-conf='cat /etc/ssh/sshd_config'
+alias ssh-edit='sudo nano /etc/ssh/sshd_config'
+
+# --- Fingerprints ---
+alias ssh-fp='ssh-keygen -lf ~/.ssh/id_ed25519.pub 2>/dev/null || ssh-keygen -lf ~/.ssh/id_rsa.pub'
+
+# --- Función resumen ---
+ssh-check() {
+  echo "=== STATUS ==="
+  systemctl is-active ssh
+
+  echo "\n=== PUERTO ==="
+  ss -tuln | grep ssh
+
+  echo "\n=== USUARIOS ==="
+  who
+
+  echo "\n=== CLAVES ==="
+  ls ~/.ssh
+}
