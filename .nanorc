@@ -1,0 +1,35 @@
+# ===== VISUAL =====
+set linenumbers
+set constantshow
+set titlecolor brightwhite,blue
+set statuscolor brightwhite,green
+set keycolor brightwhite,black
+set functioncolor brightwhite,black
+set numbercolor cyan
+set selectedcolor white,magenta
+
+# ===== EDICIÓN =====
+set autoindent
+set tabsize 4
+set tabstospaces
+set  positionlog
+set softwrap
+
+# ===== NAVEGACIÓN =====
+set mouse
+set quickblank
+set historylog
+set multibuffer
+
+# ===== BÚSQUEDA =====
+set casesensitive
+set positionlog
+
+# ===== EXPERIENCIA =====
+set indicator
+##set minibar
+set showcursor
+##set guidestripe 80
+
+
+# ===== FIN =====

@@ -1,0 +1,7 @@
+autoload -Uz compinit && compinit
+
+HISTSIZE=5000
+SAVEHIST=5000
+setopt SHARE_HISTORY
+
+PROMPT='%n@%m:%~ %# '

@@ -5,152 +5,39 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+# ===== COMPLETIONS =====
+fpath+=~/.zsh/plugins/zsh-completions/src
+autoload -Uz compinit && compinit
+# ==============================
+# 📜 ALIASES EXTERNOS
+# ==============================
+[ -f /home/cipriano/MyScriptsBashs/aliases.sh ] && source /home/cipriano/MyScriptsBashs/aliases.sh
+# ===== HISTORIAL =====
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
 
-# Path to your Oh My Zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
+setopt APPEND_HISTORY
+setopt SHARE_HISTORY
+setopt INC_APPEND_HISTORY
 
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time Oh My Zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-#ZSH_THEME="robbyrussell"
-ZSH_THEME="powerlevel10k/powerlevel10k"
-# Set list of themes to pick from when loading at random
-# Setting this variable when ZSH_THEME=random will cause zsh to load
-# a theme from this variable instead of looking in $ZSH/themes/
-# If set to an empty array, this variable will have no effect.
-# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_REDUCE_BLANKS
 
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
+# ===== NAVEGACIÓN =====
+setopt AUTO_CD
+setopt CORRECT
 
-# Uncomment the following line to use hyphen-insensitive completion.
-# Case-sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
+# ===== PLUGINS =====
+source ~/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+# ===== Powerlevel10k =====
+source ~/.zsh/powerlevel10k/powerlevel10k.zsh-theme
+# SIEMPRE ÚLTIMO
+source ~/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-# Uncomment one of the following lines to change the auto-update behavior
-# zstyle ':omz:update' mode disabled  # disable automatic updates
-# zstyle ':omz:update' mode auto      # update automatically without asking
-# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 
-# Uncomment the following line to change how often to auto-update (in days).
-# zstyle ':omz:update' frequency 13
-
-# Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS="true"
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# You can also set it to another string to have that shown instead of the default red dots.
-# e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
-# Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# You can set one of the optional three formats:
-# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# or set a custom format using the strftime function format specifications,
-# see 'man strftime' for details.
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
-# Which plugins would you like to load?
-# Standard plugins can be found in $ZSH/plugins/
-# Custom plugins may be added to $ZSH_CUSTOM/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=(
-  git
-  zsh-autosuggestions
-  zsh-syntax-highlighting
-)
-
-source $ZSH/oh-my-zsh.sh
-
-# User configuration
-
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='nvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch $(uname -m)"
-
-# Set personal aliases, overriding those provided by Oh My Zsh libs,
-# plugins, and themes. Aliases can be placed here, though Oh My Zsh
-# users are encouraged to define aliases within a top-level file in
-# the $ZSH_CUSTOM folder, with .zsh extension. Examples:
-# - $ZSH_CUSTOM/aliases.zsh
-# - $ZSH_CUSTOM/macos.zsh
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
+# ===== PROMPT =====
+PROMPT='%n@%m:%~ %# '
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-# Cargar aliases personalizados
-[ -f ~/MyScriptsBashs/aliases.sh ] && source ~/MyScriptsBashs/aliases.sh
-alias administrarVMLXC='/home/cipriano/MyScriptsBashs/administrarVMLXC.sh'
-alias aliases='/home/cipriano/MyScriptsBashs/aliases.sh'
-alias apt-auto-critical='/home/cipriano/MyScriptsBashs/apt-auto-critical.sh'
-alias AuditoriaProxmoxVE='/home/cipriano/MyScriptsBashs/AuditoriaProxmoxVE.sh'
-alias auto-clock='/home/cipriano/MyScriptsBashs/auto-clock.sh'
-alias AutoDotfileRootProxmox='/home/cipriano/MyScriptsBashs/AutoDotfileRootProxmox.sh'
-alias AutoScripts='/home/cipriano/MyScriptsBashs/AutoScripts.sh'
-alias backup_cipriano_shell_dotfiles='/home/cipriano/MyScriptsBashs/backup_cipriano_shell_dotfiles.sh'
-alias backup-promox-config='/home/cipriano/MyScriptsBashs/backup-promox-config.sh'
-alias backup-proxmox-rsync='/home/cipriano/MyScriptsBashs/backup-proxmox-rsync.sh'
-alias backup_samba='/home/cipriano/MyScriptsBashs/backup_samba.sh'
-alias CuentaInvitadoSSH='/home/cipriano/MyScriptsBashs/CuentaInvitadoSSH.sh'
-alias datosproxmox='/home/cipriano/MyScriptsBashs/datosproxmox.sh'
-alias dos='/home/cipriano/MyScriptsBashs/dos.sh'
-alias dvd_manager='/home/cipriano/MyScriptsBashs/dvd_manager.sh'
-alias generar_alias='/home/cipriano/MyScriptsBashs/generar_alias.sh'
-alias generar_alias_zsh='/home/cipriano/MyScriptsBashs/generar_alias_zsh.sh'
-alias HelloWord='/home/cipriano/MyScriptsBashs/HelloWord.sh'
-alias Info='/home/cipriano/MyScriptsBashs/Info.sh'
-alias levantarTaiScale='/home/cipriano/MyScriptsBashs/levantarTaiScale.sh'
-alias lxc-admin='/home/cipriano/MyScriptsBashs/lxc-admin.sh'
-alias montar='/home/cipriano/MyScriptsBashs/montar.sh'
-alias oda_alegria='/home/cipriano/MyScriptsBashs/oda_alegria.sh'
-alias ParticionadorAlmecenamientos='/home/cipriano/MyScriptsBashs/ParticionadorAlmecenamientos.sh'
-alias Proxmox-auto-update='/home/cipriano/MyScriptsBashs/Proxmox-auto-update.sh'
-alias proxmox_security_audit='/home/cipriano/MyScriptsBashs/proxmox_security_audit.sh'
-alias push_my_scripts='/home/cipriano/MyScriptsBashs/push_my_scripts.sh'
-alias r='/home/cipriano/MyScriptsBashs/r.sh'
-alias samba_admin='/home/cipriano/MyScriptsBashs/samba_admin.sh'
-alias setup-cpu-autogovernor='/home/cipriano/MyScriptsBashs/setup-cpu-autogovernor.sh'
-alias setup-termux='/home/cipriano/MyScriptsBashs/setup-termux.sh'
-alias timeshift-menu='/home/cipriano/MyScriptsBashs/timeshift-menu.sh'
-alias uno='/home/cipriano/MyScriptsBashs/uno.sh'
-alias usb-internet='/home/cipriano/MyScriptsBashs/usb-internet.sh'
-alias wifi-tools='/home/cipriano/MyScriptsBashs/wifi-tools.sh'
-alias miscripts='grep "^alias " /home/cipriano/.zshrc | grep "/home/cipriano/MyScriptsBashs"'
