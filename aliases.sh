@@ -1,11 +1,28 @@
 # ==========================================
-# 🔥 ALIASES PRO - CIPRIANO (LIMPIO ZSH)
+# 🔥 ALIASES PRO - CIPRIANO (LSD FIXED)
 # ==========================================
-#   Instalar
-# ==========================================
-#sudo apt update && sudo apt install -y \
-#zsh git curl wget htop tree iproute2 net-tools dnsutils traceroute lsof \
-#bat fzf lsd nala tmux neovim ncdu btop ripgrep fd-find
+##########################Inteligencia artificial################
+ai() {
+  if [ -z "$*" ]; then
+    echo "Uso: ai <consulta>"
+    return 1
+  fi
+  query=$(echo "$*" | tr ' ' '+')
+  curl -s "https://cheat.sh/$query?lang=es" | less -R
+}
+################################################################
+SCRIPTS_DIR="/home/cipriano/MyScriptsBashs"
+
+# ========================
+# AUTO ALIASES SCRIPTS
+# ========================
+for script in "$SCRIPTS_DIR"/*.sh; do
+    script_name=$(basename "$script" .sh)
+    if [ "$script_name" != "aliases" ]; then
+        alias "$script_name"="$script"
+    fi
+done
+
 # ========================
 # NAVEGACIÓN
 # ========================
@@ -18,13 +35,13 @@ alias rootdir='cd /'
 alias back='cd -'
 
 # ========================
-# LISTADO
+# LISTADO (LSD CORRECTO)
 # ========================
 if command -v lsd >/dev/null 2>&1; then
-  alias ls='lsd'
-  alias ll='lsd -lh'
-  alias la='lsd -lah'
-  alias lt='lsd -lt'
+  alias ls='lsd --icon always --group-dirs=first --color=always'
+  alias ll='lsd -lh --icon always --group-dirs=first --color=always'
+  alias la='lsd -lah --icon always --group-dirs=first --color=always'
+  alias lt='lsd -lt --icon always --color=always'
 else
   alias ls='ls --color=auto'
   alias ll='ls -lh --color=auto'
@@ -89,8 +106,8 @@ alias cluster='pvecm status'
 # ========================
 # APT
 # ========================
-alias update='sudo apt update'
-alias upgrade='sudo apt full-upgrade -y'
+alias actualiza='sudo apt update'
+alias actualizar='sudo apt full-upgrade -y'
 alias autoremove='sudo apt autoremove -y'
 alias cleanapt='sudo apt clean'
 
@@ -116,14 +133,19 @@ alias gpl='git pull'
 # ========================
 alias cls='clear'
 alias recargar='source ~/.zshrc'
-alias editar_alias='nano ~/MyScriptsBashs/aliases.sh'
+alias aliasesrc='nano ~/MyScriptsBashs/aliases.sh'
 alias reload_alias='source ~/MyScriptsBashs/aliases.sh'
 alias now='date "+%Y-%m-%d %H:%M:%S"'
+alias perfil='nano ~/.zshrc'
 
 # ========================
-# BATCAT
+# BAT (CAT CON COLOR)
 # ========================
-alias cat='batcat'
+if command -v batcat >/dev/null 2>&1; then
+  alias cat='batcat'
+elif command -v bat >/dev/null 2>&1; then
+  alias cat='bat'
+fi
 
 # ========================
 # FZF
@@ -142,51 +164,49 @@ alias tls='tmux ls'
 alias tk='tmux kill-session -t trabajo'
 
 # ========================
-# 🔐 SSH ADMIN / DEBUG
+# SSH ADMIN
 # ========================
-
-# --- Estado del servicio ---
 alias ssh-status='systemctl status ssh'
 alias ssh-active='systemctl is-active ssh'
 alias ssh-restart='sudo systemctl restart ssh'
 alias ssh-port='ss -tuln | grep ssh'
 
-# --- Conexiones ---
 alias ssh-users='who'
 alias ssh-connections='ss -tnp | grep ssh'
 alias ssh-ps='ps aux | grep [s]shd'
 
-# --- Claves SSH ---
 alias ssh-pub='cat ~/.ssh/*.pub 2>/dev/null'
 alias ssh-priv='ls -l ~/.ssh | grep id_'
 alias ssh-auth='cat ~/.ssh/authorized_keys 2>/dev/null'
 alias ssh-root-auth='sudo cat /root/.ssh/authorized_keys 2>/dev/null'
 
-# --- Generar claves ---
 alias ssh-keygen-ed25519='ssh-keygen -t ed25519 -C "cipriano@$(hostname)"'
 alias ssh-keygen-rsa='ssh-keygen -t rsa -b 4096 -C "cipriano@$(hostname)"'
 
-# --- Copiar clave pública a servidor ---
 alias ssh-copy='ssh-copy-id'
 
-# --- Carpeta SSH ---
 alias ssh-ls='ls -lah ~/.ssh'
 alias ssh-perm='ls -l ~/.ssh'
 
-# --- Logs ---
 alias ssh-log='journalctl -u ssh --no-pager | tail -n 50'
 alias ssh-logf='journalctl -u ssh -f'
 alias ssh-ok='journalctl -u ssh | grep "Accepted"'
 alias ssh-fail='journalctl -u ssh | grep "Failed"'
 
-# --- Configuración ---
 alias ssh-conf='cat /etc/ssh/sshd_config'
 alias ssh-edit='sudo nano /etc/ssh/sshd_config'
 
-# --- Fingerprints ---
 alias ssh-fp='ssh-keygen -lf ~/.ssh/id_ed25519.pub 2>/dev/null || ssh-keygen -lf ~/.ssh/id_rsa.pub'
 
-# --- Función resumen ---
+# ========================
+# POWER
+# ========================
+alias apagar='sudo poweroff'
+alias reiniciar='sudo reboot now'
+
+# ========================
+# FUNCIÓN DEBUG SSH
+# ========================
 ssh-check() {
   echo "=== STATUS ==="
   systemctl is-active ssh
