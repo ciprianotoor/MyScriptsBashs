@@ -220,3 +220,5 @@ ssh-check() {
   echo "\n=== CLAVES ==="
   ls ~/.ssh
 }
+#------------------------------------Informacion de sesiones
+alias informacion='run-parts /etc/update-motd.d/'
