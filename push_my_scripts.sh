@@ -3,7 +3,8 @@ set -euo pipefail
 
 # --- Variables ---
 REPO_DIR="/home/cipriano/MyScriptsBashs"
-KEY="/home/cipriano/.ssh/id_ed25519"
+#KEY="/home/cipriano/.ssh/id_ed25519"
+KEY="/home/cipriano/.ssh/github_proxmox.pub"
 REMOTE="git@github.com:ciprianotoor/MyScriptsBashs.git"
 BRANCH="main"
 REPO_URL="https://github.com/ciprianotoor/MyScriptsBashs"
