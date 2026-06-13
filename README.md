@@ -1,7 +1,7 @@
 # MyScriptsBashs
-Auto:Cipriano Javier Perez Garcia
-Fecha:13/06/2026
-Hora:01:50 pm
+**Auto:Cipriano Javier Perez Garcia**
+**Fecha:13/06/2026**
+**Hora:01:50 pm**
 Repositorio de scripts Bash desarrollados para **automatizar tareas en Proxmox** y facilitar la gestión de archivos y sincronización con GitHub.
 
 ## 📂 Contenido
