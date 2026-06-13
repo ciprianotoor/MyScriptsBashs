@@ -76,7 +76,7 @@ function show_pools(){
 while true; do
     clear
     echo "=============================="
-    echo "   🐧 ZFS MANAGER PROXMOX"
+    echo "      ZFS-MANAGER-PROXMOX-v1  "
     echo "=============================="
     echo "1) Ver snapshots"
     echo "2) Crear snapshot manual"
