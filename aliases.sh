@@ -223,5 +223,5 @@ ssh-check() {
 #------------------------------------Informacion de sesiones
 alias informacion='run-parts /etc/update-motd.d/'
 ###############snapshots
-alias pzfsbv1='sudo bash /home/cipriano/MyScriptsBashs/managerzfsproxmox.sh'
-alias pzfsbv2='sudo bash /home/cipriano/MyScriptsBashs/managerzfsproxmoxv2.sh'
+alias v1_pzfsb='sudo bash /home/cipriano/MyScriptsBashs/managerzfsproxmox.sh'
+alias v2_pzfsb='sudo bash /home/cipriano/MyScriptsBashs/managerzfsproxmoxv2.sh'

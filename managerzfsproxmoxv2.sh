@@ -81,7 +81,7 @@ while true; do
     clear
     echo -e "${CYAN}"
     echo "=============================="
-    echo " 🔒 PROXMOX RECOVERY MANAGER"
+    echo " 🔒 PROXMOX*-RECOVERY-MANAGER-v2"
     echo "=============================="
     echo -e "${NC}"
     echo "1) Ver snapshots"
