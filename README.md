@@ -77,4 +77,3 @@ cd /home/cipriano/MyScriptsBashs
 ```text
 git@github.com:ciprianotoor/MyScriptsBashs.git
 ```
-
