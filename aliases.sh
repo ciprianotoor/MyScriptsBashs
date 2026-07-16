@@ -22,7 +22,12 @@ for script in "$SCRIPTS_DIR"/*.sh; do
         alias "$script_name"="$script"
     fi
 done
-
+# ========================
+# Alias de ssh windows 11
+# ========================
+alias w11root='ssh w11root'
+alias w11cipriano='ssh w11cipriano'
+alias encenderw11ltsc_proxmox='sudo qm start 101'
 # ========================
 # NAVEGACIÓN
 # ========================
