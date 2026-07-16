@@ -230,3 +230,5 @@ alias informacion='run-parts /etc/update-motd.d/'
 ###############snapshots
 alias v1_pzfsb='sudo bash /home/cipriano/MyScriptsBashs/managerzfsproxmox.sh'
 alias v2_pzfsb='sudo bash /home/cipriano/MyScriptsBashs/managerzfsproxmoxv2.sh'
+##########################Certificados
+
