@@ -28,6 +28,7 @@ done
 alias w11root='ssh w11root'
 alias w11cipriano='ssh w11cipriano'
 alias encenderw11ltsc_proxmox='sudo qm start 101'
+alias apagarw11ltsc_proxmox='sudo qm shutdown 101'
 # ========================
 # NAVEGACIÓN
 # ========================
@@ -92,21 +93,21 @@ alias pingg='ping 8.8.8.8'
 # PROXMOX
 # ========================
 alias pvev='pveversion'
-alias vms='qm list'
-alias vmstart='qm start'
-alias vmstop='qm stop'
-alias vmreboot='qm reboot'
-alias vmconfig='qm config'
+alias vms='sudo qm list'
+alias vmstart='sudo qm start'
+alias vmstop='sudo qm stop'
+alias vmreboot='sudo qm reboot'
+alias vmconfig='sudo qm config'
 
-alias cts='pct list'
-alias ctstart='pct start'
-alias ctstop='pct stop'
-alias ctreboot='pct reboot'
-alias ctconfig='pct config'
+alias cts='sudo pct list'
+alias ctstart='sudo pct start'
+alias ctstop='sudo pct stop'
+alias ctreboot='sudo pct reboot'
+alias ctconfig='sudo pct config'
 
-alias storages='pvesm status'
-alias nodes='pvecm nodes'
-alias cluster='pvecm status'
+alias storages='sudo pvesm status'
+alias nodes='sudo pvecm nodes'
+alias cluster='sudo pvecm status'
 
 # ========================
 # APT
