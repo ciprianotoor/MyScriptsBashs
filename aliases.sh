@@ -58,7 +58,22 @@ fi
 alias ltr='ls -lhtr'
 alias lsize='du -sh * 2>/dev/null | sort -h'
 alias tree='tree -C'
-
+########################## alias ordenados ##########################
+aliases() {
+    {
+        printf "%-20s %s\n" "ALIAS" "DESCRIPCIÓN"
+        alias |
+        sed 's/^alias //' |
+        awk -F"[=']" '{printf "%-20s %s\n", $1, $3}'
+    } |
+    fzf \
+        --header-lines=1 \
+        --layout=reverse \
+        --border=rounded \
+        --height=80% \
+        --prompt="Aliases > "
+}
+#==================================================================
 # ========================
 # SISTEMA
 # ========================
