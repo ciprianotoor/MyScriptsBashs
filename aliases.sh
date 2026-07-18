@@ -83,8 +83,8 @@ alias kill9='kill -9'
 # ========================
 # RED
 # ========================
-alias miip='ip -4 addr'
-alias gateway='ip route'
+alias mip='ip -4 addr'
+alias puerta='ip route'
 alias puertos='ss -tuln'
 alias conexiones='ss -tunap'
 alias pingg='ping 8.8.8.8'
