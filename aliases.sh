@@ -29,6 +29,23 @@ alias w11root='ssh w11root'
 alias w11cipriano='ssh w11cipriano'
 alias encenderw11ltsc_proxmox='sudo qm start 101'
 alias apagarw11ltsc_proxmox='sudo qm shutdown 101'
+# ======================================
+########################################
+# Administracion
+# Editar configuración de Timeshift
+alias edit-timeshift='sudo nano /etc/timeshift/timeshift.json'
+alias timeshift-list='sudo timeshift --list'
+alias timeshift-create='sudo timeshift --create'
+alias timeshift-restore='sudo timeshift --restore'
+alias timeshift-delete='sudo timeshift --delete'
+alias timeshift-delete-all='sudo timeshift --delete-all'
+alias timeshift-help='timeshift --help'
+# ========================
+# Alias de apt
+# ========================
+alias instalar='sudo apt install'
+alias desintalar='sudo apt remove'
+
 # ========================
 # NAVEGACIÓN
 # ========================
