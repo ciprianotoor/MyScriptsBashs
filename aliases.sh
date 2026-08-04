@@ -11,7 +11,7 @@ ai() {
   curl -s "https://cheat.sh/$query?lang=es" | less -R
 }
 ################################################################
-SCRIPTS_DIR="/home/cipriano/MyScriptsBashs"
+SCRIPTS_DIR="/home/admin/MyScriptsBashs"
 
 # ========================
 # AUTO ALIASES SCRIPTS
@@ -153,7 +153,7 @@ alias gpl='git pull'
 # UTILIDAD
 # ========================
 alias cls='clear'
-alias recargar='source ~/.zshrc'
+alias rebote='source ~/.zshrc'
 alias aliasesrc='nano ~/MyScriptsBashs/aliases.sh'
 alias reload_alias='source ~/MyScriptsBashs/aliases.sh'
 alias now='date "+%Y-%m-%d %H:%M:%S"'
@@ -244,7 +244,7 @@ ssh-check() {
 #------------------------------------Informacion de sesiones
 alias informacion='run-parts /etc/update-motd.d/'
 ###############snapshots
-alias v1_pzfsb='sudo bash /home/cipriano/MyScriptsBashs/managerzfsproxmox.sh'
-alias v2_pzfsb='sudo bash /home/cipriano/MyScriptsBashs/managerzfsproxmoxv2.sh'
+alias v1_pzfsb='sudo bash /home/admin/MyScriptsBashs/managerzfsproxmox.sh'
+alias v2_pzfsb='sudo bash /home/admin/MyScriptsBashs/managerzfsproxmoxv2.sh'
 ##########################Certificados
 
