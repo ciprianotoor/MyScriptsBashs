@@ -241,3 +241,40 @@ de Proxmox. El autor no garantiza que funcionen en todos los entornos ni se
 hace responsable por pérdida de datos, interrupciones, daños en el sistema o
 configuraciones incorrectas. Revisa el código, confirma los dispositivos y
 realiza backups verificables antes de ejecutar operaciones sensibles.
+
+## ❓ Preguntas frecuentes
+
+### ¿Funciona fuera de Proxmox?
+
+El instalador está diseñado para Proxmox VE. Algunos aliases y scripts Bash
+pueden funcionar en Debian, pero no se garantiza compatibilidad fuera de un
+host Proxmox.
+
+### ¿Qué archivo debo editar para cambiar los aliases?
+
+Usa `aliasesrc`. Abre `aliases.sh` con Nano o `$EDITOR` y recarga los cambios
+automáticamente al cerrar el editor.
+
+### ¿Cómo subo mis cambios?
+
+Ejecuta `push_my_scripts`. El script muestra los cambios y permite añadir un
+comentario al commit.
+
+### ¿Cómo descargo cambios de GitHub?
+
+Ejecuta `update-my-scripts`. Si hay cambios locales, se detiene para evitar
+sobrescribirlos.
+
+### ¿Dónde se guardan los backups de scripts?
+
+En `~/.local/state/MyScriptsBashs/backups/`, fuera del repositorio.
+
+### ¿Por qué `.zshrc`, `.p10k.zsh` y `.nanorc` son enlaces?
+
+Para mantener una sola fuente de configuración dentro del repositorio y evitar
+que el archivo activo y la copia versionada se desincronicen.
+
+### ¿Qué hago si Git informa que hay cambios locales?
+
+Revisa `git status`, guarda o confirma tus cambios y ejecuta
+`update-my-scripts` nuevamente.
