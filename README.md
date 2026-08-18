@@ -30,6 +30,8 @@ aliases            # buscador visual de aliases con fzf
 aliashelp          # ayuda organizada por categorías
 aliasesrc          # editar aliases.sh y recargarlo al guardar
 edit-readme        # editar y revisar README.md
+TuneoNanoRoot      # copiar .nanorc tuneado al usuario root
+TuneoBashRoot      # copiar .bashrc tuneado al usuario root
 consumo            # CPU, RAM y disco del nodo
 r                  # reloj de terminal
 push_my_scripts    # sincronizar cambios con GitHub
@@ -75,6 +77,8 @@ MyScriptsBashs/
 ├── install-proxmox.sh        # Instalación del entorno
 ├── aliases.sh                # Aliases y funciones de Zsh
 ├── edit-readme.sh            # Editor seguro del README
+├── TuneoNanoRoot.sh           # Configura Nano para root mediante sudo
+├── TuneoBashRoot.sh           # Configura Bash para root mediante sudo
 ├── .zshrc / .p10k.zsh        # Zsh y Powerlevel10k
 ├── .nanorc                   # Configuración de Nano
 ├── push_my_scripts.sh        # Subir cambios a GitHub
@@ -261,6 +265,18 @@ automáticamente al cerrar el editor.
 
 Ejecuta `edit-readme`. Usa `$EDITOR` o Nano, detecta marcadores de conflicto y
 muestra si quedan cambios pendientes para `push_my_scripts`.
+
+### ¿Cómo aplico el Nano RC a root?
+
+Ejecuta `TuneoNanoRoot`. Pide sudo, respalda `/root/.nanorc` si existe y copia
+la configuración versionada con permisos `600` y propietario `root:root`.
+
+### ¿Cómo aplico el Bash RC tuneado a root?
+
+Ejecuta `TuneoBashRoot`. Pide sudo, valida el `.bashrc`, respalda
+`/root/.bashrc` si existe y copia la configuración versionada con permisos
+`600` y propietario `root:root`. Los valores `MY_IP` y `MY_PORT` del archivo
+deben personalizarse antes de usar los aliases SSH.
 
 ### ¿Cómo subo mis cambios?
 
