@@ -97,6 +97,16 @@ MyScriptsBashs/
 └── README.md
 ```
 
+Los respaldos creados desde `AutoScripts.sh` no se guardan dentro del
+repositorio. Se almacenan localmente en:
+
+```text
+~/.local/state/MyScriptsBashs/backups/
+```
+
+Esto evita subir archivos comprimidos antiguos a GitHub y mantiene separado el
+backup de scripts del backup de la configuración del nodo Proxmox.
+
 Al cargarse `aliases.sh`, cada archivo `*.sh` recibe un alias con su nombre y
 se ejecuta mediante Bash. Esto permite utilizar scripts aunque no tengan el
 bit ejecutable. `aliases.sh` no se incluye a sí mismo.

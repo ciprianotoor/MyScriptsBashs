@@ -2,9 +2,9 @@
 # panel_scripts_persistente.sh
 # Panel profesional de control de scripts en ~/MyScriptsBashs con pantalla limpia y opción salir = 0
 
-SCRIPTS_DIR="$HOME/MyScriptsBashs"
+SCRIPTS_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
 LOG_FILE="$SCRIPTS_DIR/log.txt"
-BACKUP_DIR="$SCRIPTS_DIR/respaldo_scripts"
+BACKUP_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/MyScriptsBashs/backups"
 
 mkdir -p "$SCRIPTS_DIR" "$BACKUP_DIR"
 
@@ -69,7 +69,7 @@ function borrar_script {
 function respaldo_scripts {
     FECHA=$(date +%F_%H-%M-%S)
     ARCHIVO="$BACKUP_DIR/respaldo_scripts_$FECHA.tar.gz"
-    tar czf "$ARCHIVO" -C "$SCRIPTS_DIR" . --exclude "respaldo_scripts"
+    tar --exclude='./respaldo_scripts' -czf "$ARCHIVO" -C "$SCRIPTS_DIR" .
     echo "✔ Respaldo creado: $ARCHIVO"
 }
 
