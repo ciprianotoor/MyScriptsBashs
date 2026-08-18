@@ -188,10 +188,22 @@ alias gpl='git pull'
 # ========================
 alias cls='clear'
 alias rebote='source ~/.zshrc'
-alias aliasesrc="nano '$SCRIPTS_DIR/aliases.sh'"
 alias reload_alias="source '$SCRIPTS_DIR/aliases.sh'"
 alias now='date "+%Y-%m-%d %H:%M:%S"'
 alias perfil='nano ~/.zshrc'
+
+# Edita aliases.sh y recarga los cambios solo si el editor termina correctamente.
+unalias aliasesrc 2>/dev/null || true
+aliasesrc() {
+  local editor=${EDITOR:-nano}
+  if [[ ! -f "$SCRIPTS_DIR/aliases.sh" ]]; then
+    print -u2 "❌ No existe $SCRIPTS_DIR/aliases.sh"
+    return 1
+  fi
+  "$editor" "$SCRIPTS_DIR/aliases.sh" || return
+  source "$SCRIPTS_DIR/aliases.sh"
+  print "✅ Aliases recargados desde $SCRIPTS_DIR/aliases.sh"
+}
 
 # ========================
 # BAT (CAT CON COLOR)
