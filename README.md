@@ -71,23 +71,18 @@ acciones sobre VMs o contenedores.
 
 ```text
 MyScriptsBashs/
-├── install-proxmox.sh          # Instala el entorno completo
-├── push_my_scripts.sh          # Commit, rebase y push por SSH
-├── update-my-scripts.sh        # Descarga cambios sin sobrescribir locales
-├── aliases.sh                  # Aliases y funciones cargados por Zsh
-├── .zshrc                      # Configuración principal de Zsh
-├── .p10k.zsh                   # Tema y segmentos Powerlevel10k
-├── .nanorc                     # Configuración personalizada de Nano
-├── montar.sh                   # Gestión de discos y montajes
-├── r.sh                        # Reloj tty-clock
-├── lxc-admin.sh                # Administración LXC
-├── administrarVMLXC.sh         # Menú de VMs y contenedores
-├── AuditoriaProxmoxVE.sh       # Auditoría del nodo
-├── proxmox_security_audit.sh   # Revisión de seguridad
-├── *backup*.sh                 # Respaldos de configuración
-├── *zfs*.sh                    # Herramientas ZFS
-├── *PersistentImg*.sh          # Imágenes persistentes
-├── archive/                    # Archivos antiguos conservados
+├── install-proxmox.sh        # Instalación del entorno
+├── aliases.sh                # Aliases y funciones de Zsh
+├── .zshrc / .p10k.zsh        # Zsh y Powerlevel10k
+├── .nanorc                   # Configuración de Nano
+├── push_my_scripts.sh        # Subir cambios a GitHub
+├── update-my-scripts.sh      # Descargar cambios de GitHub
+├── montar.sh                # Discos y montajes
+├── lxc-admin.sh              # Contenedores LXC
+├── administrarVMLXC.sh       # VMs y LXC
+├── *proxmox*.sh / *zfs*.sh   # Administración del nodo
+├── *backup*.sh               # Respaldos
+├── archive/                  # Archivos antiguos, fuera del flujo principal
 └── README.md
 ```
 
@@ -105,8 +100,10 @@ Al cargarse `aliases.sh`, cada archivo `*.sh` recibe un alias con su nombre y
 se ejecuta mediante Bash. Esto permite utilizar scripts aunque no tengan el
 bit ejecutable. `aliases.sh` no se incluye a sí mismo.
 
-Los comandos `qm`, `pct`, `pveversion`, `pvesm` y `pvecm` son propios de
-Proxmox VE; el sistema Proxmox ya los proporciona.
+El flujo principal es: instalar → usar aliases y scripts → subir cambios con
+`push_my_scripts` → descargar cambios con `update-my-scripts`. Los comandos
+`qm`, `pct`, `pveversion`, `pvesm` y `pvecm` son propios de Proxmox VE; el
+sistema Proxmox ya los proporciona.
 
 ## 🖥️ Aliases y configuración de terminal
 
