@@ -6,12 +6,16 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # ===== COMPLETIONS =====
-fpath+=~/.zsh/plugins/zsh-completions/src
+if [[ -d ~/.zsh/plugins/zsh-completions/src ]]; then
+  fpath+=~/.zsh/plugins/zsh-completions/src
+fi
 autoload -Uz compinit && compinit
 # ==============================
 # 📜 ALIASES EXTERNOS
 # ==============================
-[ -f /home/cipriano/MyScriptsBashs/aliases.sh ] && source /home/cipriano/MyScriptsBashs/aliases.sh
+DOTFILES_REPO=${DOTFILES_REPO:-${${(%):-%N}:A:h}}
+export DOTFILES_REPO
+[[ -f "$DOTFILES_REPO/aliases.sh" ]] && source "$DOTFILES_REPO/aliases.sh"
 # ===== HISTORIAL =====
 HISTFILE=~/.zsh_history
 HISTSIZE=10000

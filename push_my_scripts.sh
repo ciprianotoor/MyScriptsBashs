@@ -5,7 +5,7 @@ set -euo pipefail
 # Sincronización automática GitHub - Proxmox admin
 # ==================================================
 
-REPO_DIR="$HOME/MyScriptsBashs"
+REPO_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
 KEY="$HOME/.ssh/id_ed25519"
 REMOTE="git@github.com:ciprianotoor/MyScriptsBashs.git"
 BRANCH="main"
@@ -17,7 +17,8 @@ REPO_URL="https://github.com/ciprianotoor/MyScriptsBashs"
 
 ensure_ssh_agent() {
 
-    if [ -z "${SSH_AUTH_SOCK:-}" ] || ! pgrep -u "$USER" ssh-agent >/dev/null; then
+    CURRENT_USER=${USER:-$(id -un)}
+    if [ -z "${SSH_AUTH_SOCK:-}" ] || ! pgrep -u "$CURRENT_USER" ssh-agent >/dev/null; then
         eval "$(ssh-agent -s)" >/dev/null
     fi
 
@@ -84,7 +85,10 @@ sync_changes() {
 
         echo "📥 Actualizando remoto..."
 
-        git pull --rebase origin "$BRANCH" || true
+        if ! git pull --rebase origin "$BRANCH"; then
+            echo "❌ No se pudo actualizar desde el remoto; revisa el conflicto antes de continuar."
+            exit 1
+        fi
 
 
         echo "📤 Enviando cambios..."

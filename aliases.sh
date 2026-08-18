@@ -7,16 +7,18 @@ ai() {
     echo "Uso: ai <consulta>"
     return 1
   fi
+  command -v curl >/dev/null 2>&1 || { echo "Falta curl."; return 127; }
+  command -v less >/dev/null 2>&1 || { echo "Falta less."; return 127; }
   query=$(echo "$*" | tr ' ' '+')
   curl -s "https://cheat.sh/$query?lang=es" | less -R
 }
 ################################################################
-SCRIPTS_DIR="/home/admin/MyScriptsBashs"
+SCRIPTS_DIR="${DOTFILES_REPO:-$HOME/MyScriptsBashs}"
 
 # ========================
 # AUTO ALIASES SCRIPTS
 # ========================
-for script in "$SCRIPTS_DIR"/*.sh; do
+for script in "$SCRIPTS_DIR"/*.sh(N); do
     script_name=$(basename "$script" .sh)
     if [ "$script_name" != "aliases" ]; then
         alias "$script_name"="$script"
@@ -77,6 +79,10 @@ alias lsize='du -sh * 2>/dev/null | sort -h'
 alias tree='tree -C'
 ########################## alias ordenados ##########################
 aliases() {
+    command -v fzf >/dev/null 2>&1 || {
+        echo "Falta fzf. Instálalo con: sudo apt install fzf"
+        return 127
+    }
     {
         printf "%-20s %s\n" "ALIAS" "DESCRIPCIÓN"
         alias |
@@ -171,8 +177,8 @@ alias gpl='git pull'
 # ========================
 alias cls='clear'
 alias rebote='source ~/.zshrc'
-alias aliasesrc='nano ~/MyScriptsBashs/aliases.sh'
-alias reload_alias='source ~/MyScriptsBashs/aliases.sh'
+alias aliasesrc="nano '$SCRIPTS_DIR/aliases.sh'"
+alias reload_alias="source '$SCRIPTS_DIR/aliases.sh'"
 alias now='date "+%Y-%m-%d %H:%M:%S"'
 alias perfil='nano ~/.zshrc'
 
@@ -261,7 +267,6 @@ ssh-check() {
 #------------------------------------Informacion de sesiones
 alias informacion='run-parts /etc/update-motd.d/'
 ###############snapshots
-alias v1_pzfsb='sudo bash /home/admin/MyScriptsBashs/managerzfsproxmox.sh'
-alias v2_pzfsb='sudo bash /home/admin/MyScriptsBashs/managerzfsproxmoxv2.sh'
+alias v1_pzfsb="sudo bash '$SCRIPTS_DIR/managerzfsproxmox.sh'"
+alias v2_pzfsb="sudo bash '$SCRIPTS_DIR/managerzfsproxmoxv2.sh'"
 ##########################Certificados
-

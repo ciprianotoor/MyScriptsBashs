@@ -12,11 +12,11 @@ Repositorio de scripts Bash desarrollados para **automatizar tareas en Proxmox**
 
 ## 📂 Contenido
 
-* `/home/cipriano/MyScriptsBashs/`
+* `MyScriptsBashs/`
 
   * Scripts de automatización de tareas.
   * Script principal: `push_my_scripts.sh` — detecta cambios, hace commit y push a GitHub automáticamente.
-* `.gitignore` (recomendado) para excluir backups, logs o archivos temporales.
+* `install-proxmox.sh` — instala el entorno en un host Proxmox VE y enlaza los dotfiles.
 
 ---
 
@@ -41,7 +41,21 @@ Repositorio de scripts Bash desarrollados para **automatizar tareas en Proxmox**
 * Proxmox VE con acceso SSH.
 * Git instalado.
 * Clave SSH pública agregada a GitHub.
-* Carpeta de scripts: `/home/cipriano/MyScriptsBashs`.
+* Una cuenta de usuario con `sudo`.
+
+## 🧰 Instalación en Proxmox
+
+El instalador es específico para el host Proxmox y no se ejecuta en Debian genérico ni en Termux.
+Realiza una copia fechada de los archivos existentes, instala Git/Zsh/Nano y los plugins de Zsh,
+y enlaza `.zshrc`, `.p10k.zsh` y `.nanorc` desde el repositorio. Así, la configuración tuneada de
+Nano y Powerlevel10k queda versionada en una sola ubicación.
+
+```bash
+git clone https://github.com/ciprianotoor/MyScriptsBashs.git
+cd MyScriptsBashs
+./install-proxmox.sh
+exec zsh
+```
 
 ---
 
@@ -50,7 +64,7 @@ Repositorio de scripts Bash desarrollados para **automatizar tareas en Proxmox**
 ### Ejecutar el script de sincronización:
 
 ```bash
-cd /home/cipriano/MyScriptsBashs
+cd ~/MyScriptsBashs
 ./push_my_scripts.sh
 ```
 
