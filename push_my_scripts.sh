@@ -81,6 +81,19 @@ sync_changes() {
 
     cd "$REPO_DIR"
 
+    REBASE_MERGE=$(git rev-parse --git-path rebase-merge)
+    REBASE_APPLY=$(git rev-parse --git-path rebase-apply)
+    if [[ -d "$REBASE_MERGE" || -d "$REBASE_APPLY" ]]; then
+        if [[ -z "$(git status --porcelain)" ]]; then
+            info '🔄 Finalizando un rebase interrumpido...'
+            GIT_EDITOR=true git rebase --continue
+        else
+            printf '%s❌ Hay un rebase pendiente con cambios o conflictos.%s\n' "$YELLOW" "$RESET"
+            printf '%sResuélvelo y ejecuta: git rebase --continue%s\n' "$DIM" "$RESET"
+            return 1
+        fi
+    fi
+
     git add --all
 
 
