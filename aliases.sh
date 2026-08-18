@@ -18,10 +18,17 @@ SCRIPTS_DIR="${DOTFILES_REPO:-$HOME/MyScriptsBashs}"
 # ========================
 # AUTO ALIASES SCRIPTS
 # ========================
+typeset -ga DOTFILE_SCRIPT_ALIASES
+if (( ${#DOTFILE_SCRIPT_ALIASES[@]} )); then
+  unalias -- $DOTFILE_SCRIPT_ALIASES 2>/dev/null
+fi
+DOTFILE_SCRIPT_ALIASES=()
 for script in "$SCRIPTS_DIR"/*.sh(N); do
     script_name=$(basename "$script" .sh)
     if [ "$script_name" != "aliases" ]; then
-        alias "$script_name"="$script"
+        # Ejecutar mediante Bash también permite usar scripts sin bit ejecutable.
+        alias "$script_name"="bash '$script'"
+        DOTFILE_SCRIPT_ALIASES+=("$script_name")
     fi
 done
 # ========================
@@ -76,7 +83,11 @@ fi
 
 alias ltr='ls -lhtr'
 alias lsize='du -sh * 2>/dev/null | sort -h'
-alias tree='tree -C'
+if command -v tree >/dev/null 2>&1; then
+  alias tree='tree -C'
+else
+  alias tree='find . -maxdepth 2 -print'
+fi
 ########################## alias ordenados ##########################
 aliases() {
     command -v fzf >/dev/null 2>&1 || {
