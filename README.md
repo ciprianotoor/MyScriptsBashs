@@ -1,48 +1,29 @@
-# MyScriptsBashs
+# 🟠 MyScriptsBashs · Proxmox Toolkit
 
-Colección de scripts Bash y configuración de terminal para administrar un host
-**Proxmox VE**. El repositorio también incluye un instalador reproducible para
-que otro usuario pueda clonar el proyecto y obtener el mismo entorno de Zsh,
-Powerlevel10k, aliases y Nano.
+> Colección de scripts Bash, aliases y dotfiles para administrar un nodo
+> **Proxmox VE** desde una terminal Zsh personalizada.
 
-## Qué instala `install-proxmox.sh`
+![Proxmox VE](https://img.shields.io/badge/Proxmox%20VE-host%20toolkit-orange?logo=proxmox&logoColor=white)
+![Shell](https://img.shields.io/badge/shell-Bash%20%2B%20Zsh-1f425f?logo=gnu-bash&logoColor=white)
+![Estado](https://img.shields.io/badge/estado-activo-2ea44f)
+![Licencia](https://img.shields.io/badge/licencia-personal-lightgrey)
 
-El instalador solo continúa si detecta Proxmox VE (`/etc/pve/.version` o
-`pveversion`). Ejecutado desde el usuario que usará la terminal, realiza estas
-acciones:
+## 📌 Ficha del proyecto
 
-1. Instala con APT las dependencias usadas por `aliases.sh`:
+| Dato | Valor |
+|---|---|
+| **Autor** | Cipriano Javier Perez Garcia |
+| **Proyecto** | MyScriptsBashs · Proxmox Toolkit |
+| **Entorno objetivo** | Proxmox VE sobre Debian |
+| **Última modificación** | 18 de agosto de 2026 |
+| **Repositorio** | `github.com/ciprianotoor/MyScriptsBashs` |
+| **Instalador** | `install-proxmox.sh` |
+| **Sincronización** | `push_my_scripts.sh` mediante SSH |
 
-   `git`, `zsh`, `curl`, `nano`, `less`, `lsd`, `fzf`, `bat`, `tree`, `tmux`,
-   `openssh-client`, `iproute2`, `iputils-ping`, `procps`, `util-linux`,
-   `hostname`, `debianutils`, `gawk`, `sed`, `grep`, `coreutils`, `timeshift` y
-   `smartmontools` y `tty-clock`.
+> 🟠 **Importante:** el instalador está diseñado para un host Proxmox VE. No es
+> un instalador genérico de Debian ni un instalador para Termux/Android.
 
-2. Descarga o actualiza estos plugins en `~/.zsh/`:
-
-   - Powerlevel10k
-   - zsh-autosuggestions
-   - zsh-syntax-highlighting
-   - zsh-completions
-
-3. Enlaza los archivos versionados del repositorio:
-
-   ```text
-   ~/.zshrc    -> <repositorio>/.zshrc
-   ~/.p10k.zsh -> <repositorio>/.p10k.zsh
-   ~/.nanorc   -> <repositorio>/.nanorc
-   ```
-
-   De esta forma no hay dos configuraciones activas. Los archivos existentes
-   se conservan como `*.backup-AAAAmmdd-HHMMSS` antes de crear los enlaces.
-
-El instalador no sobrescribe `/root/.bashrc`, no cambia la configuración de
-red y no ejecuta acciones sobre máquinas virtuales o contenedores.
-
-## Instalación
-
-Requisitos: Proxmox VE, una cuenta con `sudo` y acceso a Internet para APT y
-GitHub.
+## ⚡ Inicio rápido
 
 ```bash
 git clone https://github.com/ciprianotoor/MyScriptsBashs.git
@@ -51,17 +32,96 @@ cd MyScriptsBashs
 exec zsh
 ```
 
-El script puede ejecutarse desde cualquier ruta; no presupone que el repositorio
-esté en `~/MyScriptsBashs`. Para usar `push_my_scripts.sh`, la cuenta debe tener
-una clave SSH autorizada para el repositorio de GitHub.
+Después de instalar:
 
-## Configurar SSH entre Proxmox y GitHub
+```bash
+montar             # herramienta prioritaria de discos y montajes
+aliases            # buscador visual de aliases con fzf
+aliasesrc          # editar aliases.sh y recargarlo al guardar
+consumo            # CPU, RAM y disco del nodo
+r                  # reloj de terminal
+push_my_scripts    # sincronizar cambios con GitHub
+```
 
-Estos pasos permiten que `push_my_scripts.sh` haga `commit` y `push` sin pedir
-contraseña de GitHub. Ejecútalos con el usuario propietario del repositorio,
-no necesariamente como `root`.
+## 🧰 Qué instala `install-proxmox.sh`
 
-### 1. Crear una clave en Proxmox
+El script verifica `/etc/pve/.version` o `pveversion` antes de continuar.
+Después instala las dependencias usadas por `aliases.sh`:
+
+```text
+git zsh curl nano less lsd fzf bat tree tmux openssh-client
+iproute2 iputils-ping procps util-linux hostname debianutils
+gawk sed grep coreutils timeshift smartmontools tty-clock
+```
+
+También descarga o actualiza en `~/.zsh/`:
+
+- Powerlevel10k
+- zsh-autosuggestions
+- zsh-syntax-highlighting
+- zsh-completions
+
+Y crea una única fuente de configuración mediante enlaces simbólicos:
+
+```text
+~/.zshrc    -> <repositorio>/.zshrc
+~/.p10k.zsh -> <repositorio>/.p10k.zsh
+~/.nanorc   -> <repositorio>/.nanorc
+```
+
+Si ya existen archivos, el instalador los conserva como copias fechadas:
+`*.backup-AAAAmmdd-HHMMSS`.
+
+El instalador no sobrescribe `/root/.bashrc`, no cambia la red y no ejecuta
+acciones sobre VMs o contenedores.
+
+## 🗂️ Estructura del repositorio
+
+```text
+MyScriptsBashs/
+├── install-proxmox.sh          # Instala el entorno completo
+├── push_my_scripts.sh          # Commit, rebase y push por SSH
+├── aliases.sh                  # Aliases y funciones cargados por Zsh
+├── .zshrc                      # Configuración principal de Zsh
+├── .p10k.zsh                   # Tema y segmentos Powerlevel10k
+├── .nanorc                     # Configuración personalizada de Nano
+├── montar.sh                   # Gestión de discos y montajes
+├── r.sh                        # Reloj tty-clock
+├── lxc-admin.sh                # Administración LXC
+├── administrarVMLXC.sh         # Menú de VMs y contenedores
+├── AuditoriaProxmoxVE.sh       # Auditoría del nodo
+├── proxmox_security_audit.sh   # Revisión de seguridad
+├── *backup*.sh                 # Respaldos de configuración
+├── *zfs*.sh                    # Herramientas ZFS
+├── *PersistentImg*.sh          # Imágenes persistentes
+└── README.md
+```
+
+Al cargarse `aliases.sh`, cada archivo `*.sh` recibe un alias con su nombre y
+se ejecuta mediante Bash. Esto permite utilizar scripts aunque no tengan el
+bit ejecutable. `aliases.sh` no se incluye a sí mismo.
+
+Los comandos `qm`, `pct`, `pveversion`, `pvesm` y `pvecm` son propios de
+Proxmox VE; el sistema Proxmox ya los proporciona.
+
+## 🖥️ Aliases y configuración de terminal
+
+```bash
+aliases                  # Buscar aliases con fzf
+aliasesrc                # Editar aliases.sh y recargar automáticamente
+reload_alias             # Recargar aliases.sh sin abrir el editor
+exec zsh                 # Reiniciar la sesión Zsh
+consumo                  # Resumen de consumo del nodo
+montar                   # Discos y montajes
+r                        # Reloj tty-clock
+```
+
+`aliasesrc` utiliza `$EDITOR` si está definido y, de lo contrario, abre Nano.
+Solo recarga la configuración si el editor termina correctamente.
+
+## 🔐 Configurar SSH entre Proxmox y GitHub
+
+Ejecuta estos pasos con el usuario propietario del repositorio:
 
 ```bash
 sudo apt install -y git openssh-client
@@ -70,41 +130,33 @@ chmod 700 ~/.ssh
 ssh-keygen -t ed25519 -C "proxmox-git-$(hostname)" -f ~/.ssh/id_ed25519
 chmod 600 ~/.ssh/id_ed25519
 chmod 644 ~/.ssh/id_ed25519.pub
-```
-
-Se recomienda proteger la clave con una passphrase.
-
-### 2. Añadir la clave pública a GitHub
-
-```bash
 cat ~/.ssh/id_ed25519.pub
 ```
 
-En GitHub abre **Settings → SSH and GPG keys → New SSH key**, pega el contenido
-completo y guarda la clave.
-
-### 3. Probar la conexión
+En GitHub abre **Settings → SSH and GPG keys → New SSH key**, pega la clave
+pública y guarda. Luego prueba:
 
 ```bash
 ssh-keyscan -H github.com >> ~/.ssh/known_hosts
 chmod 644 ~/.ssh/known_hosts
 ssh -T git@github.com
-```
-
-GitHub confirmará la autenticación, pero indicará que no ofrece una shell
-interactiva; ese resultado es normal.
-
-### 4. Configurar el remoto y el agente SSH
-
-```bash
-git remote set-url origin git@github.com:TU_USUARIO/TU_REPOSITORIO.git
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_ed25519
-git config --global user.name "Tu nombre"
-git config --global user.email "tu-correo@example.com"
 ```
 
-Para usar `push_my_scripts.sh` con otro repositorio sin editar el script:
+La respuesta de GitHub puede indicar que no ofrece una shell interactiva; eso
+es normal y confirma que la autenticación funcionó.
+
+## 📤 Sincronizar con `push_my_scripts.sh`
+
+El script calcula la carpeta real donde está instalado, añade cambios, crea un
+commit fechado, actualiza `main` mediante rebase y hace push por SSH.
+
+```bash
+push_my_scripts
+```
+
+Para usarlo con otro repositorio:
 
 ```bash
 export PUSH_SSH_KEY="$HOME/.ssh/id_ed25519"
@@ -117,70 +169,15 @@ push_my_scripts
 La clave privada nunca debe subirse al repositorio; solo se registra en GitHub
 el archivo `.pub`.
 
-## Estructura
-
-```text
-MyScriptsBashs/
-├── install-proxmox.sh          # Instalador del entorno Proxmox
-├── push_my_scripts.sh          # Commit y push automático por SSH
-├── aliases.sh                  # Alias y funciones cargados por Zsh
-├── .zshrc                      # Configuración principal de Zsh
-├── .p10k.zsh                   # Tema y segmentos de Powerlevel10k
-├── .nanorc                     # Configuración personalizada de Nano
-├── lxc-admin.sh                # Administración de contenedores LXC
-├── administrarVMLXC.sh         # Menú de VMs y contenedores
-├── AuditoriaProxmoxVE.sh       # Auditoría del nodo
-├── proxmox_security_audit.sh   # Revisión de seguridad
-├── *backup*.sh                 # Respaldos de configuración
-├── *zfs*.sh                    # Herramientas para ZFS
-├── *PersistentImg*.sh          # Imágenes persistentes
-└── README.md
-```
-
-Los demás scripts se pueden ejecutar directamente desde el repositorio. Al
-cargar `aliases.sh`, se genera automáticamente un alias para cada archivo
-`*.sh` de esta carpeta; cada alias ejecuta el script mediante Bash, incluso si
-el archivo no tiene el bit ejecutable.
-Los comandos `qm`, `pct`, `pveversion`, `pvesm` y `pvecm` son propios de
-Proxmox VE y no se instalan mediante APT adicional.
-
-## Uso diario
-
-Después de instalar:
-
-```bash
-exec zsh                 # recargar la configuración
-aliases                  # buscar aliases con fzf
-aliasesrc                # editar aliases.sh y recargarlo al guardar
-reload_alias             # recargar aliases.sh sin abrir el editor
-consumo                  # resumen de CPU, RAM y disco
-montar                   # herramienta prioritaria de discos y montajes
-r                       # reloj de terminal (tty-clock)
-push_my_scripts          # sincronizar cambios con GitHub
-```
-
-También están disponibles los aliases para VMs/LXC, red, SSH, logs, APT,
-tmux, Timeshift, Git, `r.sh` (reloj de terminal) y herramientas de diagnóstico.
-
-`aliasesrc` usa la variable `$EDITOR` si está definida; de lo contrario abre
-Nano. Solo recarga la configuración si el editor termina correctamente.
-
-## Sincronización con GitHub
-
-`push_my_scripts.sh` calcula automáticamente la carpeta donde está instalado,
-añade todos los cambios, crea un commit con fecha, actualiza `main` mediante
-rebase y hace push al remoto SSH:
-
-```text
-git@github.com:ciprianotoor/MyScriptsBashs.git
-```
-
-Si el rebase encuentra conflictos, el script se detiene para que se resuelvan
-manualmente; no oculta el error.
-
-## Notas de seguridad
+## ⚠️ Seguridad y buenas prácticas
 
 - Revisa cada script antes de ejecutarlo con `sudo`.
+- Prueba con especial cuidado formateo, particionado, ZFS, restauración y apagado.
 - No guardes claves, códigos 2FA ni contraseñas en el repositorio.
-- Mantén la clave SSH con permisos restrictivos y, preferiblemente, passphrase.
-- Prueba scripts de discos, ZFS, backups y apagado en un entorno controlado.
+- Mantén la clave SSH con permisos restrictivos y passphrase.
+- Haz un backup antes de modificar configuraciones del nodo.
+
+## 🔗 Enlaces
+
+- Repositorio: <https://github.com/ciprianotoor/MyScriptsBashs>
+- GitHub SSH: <https://docs.github.com/en/authentication/connecting-to-github-with-ssh>
