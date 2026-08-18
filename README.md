@@ -27,10 +27,12 @@ Después de instalar:
 ```bash
 montar             # herramienta prioritaria de discos y montajes
 aliases            # buscador visual de aliases con fzf
+aliashelp          # ayuda organizada por categorías
 aliasesrc          # editar aliases.sh y recargarlo al guardar
 consumo            # CPU, RAM y disco del nodo
 r                  # reloj de terminal
 push_my_scripts    # sincronizar cambios con GitHub
+update-my-scripts  # descargar cambios desde GitHub
 ```
 
 ## 🧰 Qué instala `install-proxmox.sh`
@@ -71,6 +73,7 @@ acciones sobre VMs o contenedores.
 MyScriptsBashs/
 ├── install-proxmox.sh          # Instala el entorno completo
 ├── push_my_scripts.sh          # Commit, rebase y push por SSH
+├── update-my-scripts.sh        # Descarga cambios sin sobrescribir locales
 ├── aliases.sh                  # Aliases y funciones cargados por Zsh
 ├── .zshrc                      # Configuración principal de Zsh
 ├── .p10k.zsh                   # Tema y segmentos Powerlevel10k
@@ -109,6 +112,7 @@ Proxmox VE; el sistema Proxmox ya los proporciona.
 
 ```bash
 aliases                  # Buscar aliases con fzf
+aliashelp                # Ver nombres y funciones por categoría
 aliasesrc                # Editar aliases.sh y recargar automáticamente
 reload_alias             # Recargar aliases.sh sin abrir el editor
 exec zsh                 # Reiniciar la sesión Zsh
@@ -119,6 +123,11 @@ r                        # Reloj tty-clock
 
 `aliasesrc` utiliza `$EDITOR` si está definido y, de lo contrario, abre Nano.
 Solo recarga la configuración si el editor termina correctamente.
+
+Los nombres descriptivos (`listar_vms`, `vm_iniciar`, `listar_lxc`,
+`ip_local`, `procesos_memoria`, `zfs_backup_v1`, etc.) son los recomendados.
+Se conservan los nombres cortos antiguos (`vms`, `vmstart`, `cts`, `mip`,
+`pvev`, etc.) para no romper hábitos ni scripts existentes.
 
 ## 🔐 Configurar SSH entre Proxmox y GitHub
 
@@ -174,6 +183,23 @@ push_my_scripts
 
 La clave privada nunca debe subirse al repositorio; solo se registra en GitHub
 el archivo `.pub`.
+
+## 📥 Actualizar desde GitHub
+
+`update-my-scripts.sh` comprueba primero que no existan cambios locales. Si el
+repositorio está limpio, descarga la rama `main` con `git pull --ff-only`. Si
+hay modificaciones locales, se detiene y muestra los archivos afectados para
+evitar sobrescribir trabajo.
+
+```bash
+update-my-scripts
+```
+
+Después de una actualización, recarga Zsh:
+
+```bash
+exec zsh
+```
 
 ## ⚠️ Seguridad y buenas prácticas
 

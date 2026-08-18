@@ -53,7 +53,8 @@ alias timeshift-help='timeshift --help'
 # Alias de apt
 # ========================
 alias instalar='sudo apt install'
-alias desintalar='sudo apt remove'
+alias desinstalar='sudo apt remove'
+alias desintalar='desinstalar'  # Compatibilidad con el nombre anterior.
 
 # ========================
 # NAVEGACIÓN
@@ -107,6 +108,33 @@ aliases() {
         --height=80% \
         --prompt="Aliases > "
 }
+
+# Ayuda rápida con nombres descriptivos. `aliases` sigue disponible para buscar
+# cualquier alias mediante fzf; `aliashelp` explica los más importantes.
+aliashelp() {
+  cat <<'HELP'
+=== AYUDA DE ALIASES PROXMOX ===
+
+Sistema       cpu_info, memoria, discos, espacio_disco, info_sistema
+Procesos      procesos, procesos_memoria, procesos_cpu, kill9
+Red           ip_local, ruta_red, puertos_escucha, conexiones_red
+              probar_internet
+VM Proxmox    listar_vms, vm_iniciar, vm_detener, vm_reiniciar
+              vm_configurar
+LXC           listar_lxc, lxc_iniciar, lxc_detener, lxc_reiniciar
+              lxc_configurar
+Cluster       almacenamiento_estado, nodos_cluster, estado_cluster
+ZFS           zfs_backup_v1, zfs_backup_v2
+Terminal      recargar_zsh, aliasesrc, reload_alias, tmux_nuevo
+              tmux_conectar, tmux_sesiones, tmux_cerrar
+Git           gs, ga, gaa, gc, gp, gpl
+Scripts       montar, r, disk_health, backup-promox-config
+              install-proxmox, update-my-scripts, push_my_scripts
+
+Los nombres cortos anteriores (vms, vmstart, cts, pvev, etc.) se conservan
+como compatibilidad, pero los nombres descriptivos son los recomendados.
+HELP
+}
 #==================================================================
 # ========================
 # SISTEMA
@@ -119,6 +147,13 @@ alias mounts='mount | column -t'
 alias uptime='uptime -p'
 alias kernel='uname -r'
 alias osinfo='hostnamectl'
+alias cpu_info='lscpu'
+alias memoria='free -h'
+alias discos='lsblk -f'
+alias espacio_disco='df -h'
+alias montajes='mount | column -t'
+alias version_kernel='uname -r'
+alias info_sistema='hostnamectl'
 
 # ========================
 # PROCESOS
@@ -128,6 +163,9 @@ alias psg='ps aux | grep -i'
 alias psmem='ps aux --sort=-%mem | head'
 alias pscpu='ps aux --sort=-%cpu | head'
 alias kill9='kill -9'
+alias procesos='ps aux'
+alias procesos_memoria='ps aux --sort=-%mem | head'
+alias procesos_cpu='ps aux --sort=-%cpu | head'
 
 # ========================
 # RED
@@ -137,26 +175,45 @@ alias puerta='ip route'
 alias puertos='ss -tuln'
 alias conexiones='ss -tunap'
 alias pingg='ping 8.8.8.8'
+alias ip_local='ip -4 addr'
+alias ruta_red='ip route'
+alias puertos_escucha='ss -tuln'
+alias conexiones_red='ss -tunap'
+alias probar_internet='ping 8.8.8.8'
 
 # ========================
 # PROXMOX
 # ========================
 alias pvev='pveversion'
+alias proxmox_version='pveversion'
 alias vms='sudo qm list'
+alias listar_vms='sudo qm list'
 alias vmstart='sudo qm start'
+alias vm_iniciar='sudo qm start'
 alias vmstop='sudo qm stop'
+alias vm_detener='sudo qm stop'
 alias vmreboot='sudo qm reboot'
+alias vm_reiniciar='sudo qm reboot'
 alias vmconfig='sudo qm config'
+alias vm_configurar='sudo qm config'
 
 alias cts='sudo pct list'
+alias listar_lxc='sudo pct list'
 alias ctstart='sudo pct start'
+alias lxc_iniciar='sudo pct start'
 alias ctstop='sudo pct stop'
+alias lxc_detener='sudo pct stop'
 alias ctreboot='sudo pct reboot'
+alias lxc_reiniciar='sudo pct reboot'
 alias ctconfig='sudo pct config'
+alias lxc_configurar='sudo pct config'
 
 alias storages='sudo pvesm status'
+alias almacenamiento_estado='sudo pvesm status'
 alias nodes='sudo pvecm nodes'
+alias nodos_cluster='sudo pvecm nodes'
 alias cluster='sudo pvecm status'
+alias estado_cluster='sudo pvecm status'
 
 # ========================
 # APT
@@ -188,6 +245,7 @@ alias gpl='git pull'
 # ========================
 alias cls='clear'
 alias rebote='source ~/.zshrc'
+alias recargar_zsh='source ~/.zshrc'
 alias reload_alias="source '$SCRIPTS_DIR/aliases.sh'"
 alias now='date "+%Y-%m-%d %H:%M:%S"'
 alias perfil='nano ~/.zshrc'
@@ -229,6 +287,10 @@ alias tn='tmux new -s trabajo'
 alias ta='tmux attach -t trabajo'
 alias tls='tmux ls'
 alias tk='tmux kill-session -t trabajo'
+alias tmux_nuevo='tmux new -s trabajo'
+alias tmux_conectar='tmux attach -t trabajo'
+alias tmux_sesiones='tmux ls'
+alias tmux_cerrar='tmux kill-session -t trabajo'
 
 # ========================
 # SSH ADMIN
@@ -292,4 +354,6 @@ alias informacion='run-parts /etc/update-motd.d/'
 ###############snapshots
 alias v1_pzfsb="sudo bash '$SCRIPTS_DIR/managerzfsproxmox.sh'"
 alias v2_pzfsb="sudo bash '$SCRIPTS_DIR/managerzfsproxmoxv2.sh'"
+alias zfs_backup_v1="sudo bash '$SCRIPTS_DIR/managerzfsproxmox.sh'"
+alias zfs_backup_v2="sudo bash '$SCRIPTS_DIR/managerzfsproxmoxv2.sh'"
 ##########################Certificados
