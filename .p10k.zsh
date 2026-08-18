@@ -42,6 +42,7 @@
     vcs                     # git status
     newline                 # \n  
    dir                     # current directory
+   proxmox_updates         # actualizaciones APT disponibles
     newline                 # \n
     prompt_char           # prompt symbol
     )
@@ -116,10 +117,11 @@
     # =========================[ Line #2 ]=========================
      newline                 # \n
      vpn_ip                  # virtual private network indicator
-    # =========================[ Line #3 ]=========================
-    newline                 # \n
     ip                      # ip address and bandwidth usage for a specified network interface
     newline                 # \n
+    network_rate            # velocidad de red
+    newline                 # \n
+    right_marker            # cierre simétrico de la línea de entrada
    
     #ip                    # ip address and bandwidth usage for a specified network interface
     #public_ip             # public IP address
@@ -153,13 +155,13 @@
 
   # Connect left prompt lines with these symbols. You'll probably want to use the same color
   # as POWERLEVEL9K_MULTILINE_FIRST_PROMPT_GAP_FOREGROUND below.
-  typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX='%238F╭─'
-  typeset -g POWERLEVEL9K_MULTILINE_NEWLINE_PROMPT_PREFIX='%238F├─'
-  typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX='%238F╰─'
+  typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX='%208F╭─'
+  typeset -g POWERLEVEL9K_MULTILINE_NEWLINE_PROMPT_PREFIX='%208F├─'
+  typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX='%208F╰─'
   # Connect right prompt lines with these symbols.
-  typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_SUFFIX='%238F─╮'
-  typeset -g POWERLEVEL9K_MULTILINE_NEWLINE_PROMPT_SUFFIX='%238F─┤'
-  typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_SUFFIX='%238F─╯'
+  typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_SUFFIX='%208F─╮'
+  typeset -g POWERLEVEL9K_MULTILINE_NEWLINE_PROMPT_SUFFIX='%208F─┤'
+  typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_SUFFIX='%208F─╯'
 
   # Filler between left and right prompt on the first prompt line. You can set it to ' ', '·' or
   # '─'. The last two make it easier to see the alignment between left and right prompt and to
@@ -182,7 +184,7 @@
   typeset -g POWERLEVEL9K_BACKGROUND=234
 
   # Separator between same-color segments on the left.
-  typeset -g POWERLEVEL9K_LEFT_SUBSEGMENT_SEPARATOR='%242F\u2502'
+  typeset -g POWERLEVEL9K_LEFT_SUBSEGMENT_SEPARATOR='%244F\u2502'
   # Separator between same-color segments on the right.
   typeset -g POWERLEVEL9K_RIGHT_SUBSEGMENT_SEPARATOR='%242F\u2502'
   # Separator between different-color segments on the left.
@@ -234,17 +236,22 @@
 
   ##################################[ dir: current directory ]##################################
   # Default current directory color.
-  typeset -g POWERLEVEL9K_DIR_FOREGROUND=31
+  typeset -g POWERLEVEL9K_DIR_FOREGROUND=117
+  typeset -g POWERLEVEL9K_DIR_BACKGROUND=234
+  typeset -g POWERLEVEL9K_DIR_VISUAL_IDENTIFIER_COLOR=208
+  typeset -g POWERLEVEL9K_DIR_LEFT_MIDDLE_WHITESPACE='  '
+  # Deja aire entre la ruta y el siguiente bloque del prompt.
+  typeset -g POWERLEVEL9K_DIR_RIGHT_WHITESPACE='   '
   # If directory is too long, shorten some of its segments to the shortest possible unique
   # prefix. The shortened directory can be tab-completed to the original.
   typeset -g POWERLEVEL9K_SHORTEN_STRATEGY=truncate_to_unique
   # Replace removed segment suffixes with this symbol.
   typeset -g POWERLEVEL9K_SHORTEN_DELIMITER=
   # Color of the shortened directory segments.
-  typeset -g POWERLEVEL9K_DIR_SHORTENED_FOREGROUND=103
+  typeset -g POWERLEVEL9K_DIR_SHORTENED_FOREGROUND=110
   # Color of the anchor directory segments. Anchor segments are never shortened. The first
   # segment is always an anchor.
-  typeset -g POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=39
+  typeset -g POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=117
   # Display anchor directory segments in bold.
   typeset -g POWERLEVEL9K_DIR_ANCHOR_BOLD=true
   # Don't shorten directories that contain any of these files. They are anchors.
@@ -527,6 +534,7 @@
   # These settings are used for repositories other than Git or when gitstatusd fails and
   # Powerlevel10k has to fall back to using vcs_info.
   typeset -g POWERLEVEL9K_VCS_CLEAN_FOREGROUND=76
+  typeset -g POWERLEVEL9K_VCS_BACKGROUND=234
   typeset -g POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND=76
   typeset -g POWERLEVEL9K_VCS_MODIFIED_FOREGROUND=178
 
@@ -1607,7 +1615,7 @@
   # IP color.
   typeset -g POWERLEVEL9K_IP_FOREGROUND=38
   # Display LAN IP address and bandwidth.
-  typeset -g POWERLEVEL9K_IP_CONTENT_EXPANSION='${P9K_IP_RX_RATE:+%70F⇣$P9K_IP_RX_RATE }${P9K_IP_TX_RATE:+%215F⇡$P9K_IP_TX_RATE }%38F$P9K_IP_IP'
+  typeset -g POWERLEVEL9K_IP_CONTENT_EXPANSION='%38F$P9K_IP_IP%f'
   # Show information for the first network interface whose name matches this regular expression.
   # Match common wired/wifi LAN adapter names (en*, eth*, wl*, vmbr*, br*).
   typeset -g POWERLEVEL9K_IP_INTERFACE='^(en|eth|wl|vmbr|br).*'
@@ -1676,11 +1684,19 @@
   # Example of a user-defined prompt segment. Function prompt_last_command will be called on every
   # prompt if `last_command` prompt segment is added to POWERLEVEL9K_LEFT_PROMPT_ELEMENTS or
   # POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS.
-  typeset -g P9K_LAST_CMD_LABEL_COLOR=15
-  typeset -g P9K_LAST_CMD_TEXT_COLOR=141
+  typeset -g P9K_LAST_CMD_LABEL_COLOR=208
+  typeset -g P9K_LAST_CMD_TEXT_COLOR=255
+  # El primer prompt de la sesión muestra `>`; después de un comando, `>>`.
+  typeset -gi P9K_LAST_CMD_INITIAL_HISTCMD=${HISTCMD:-0}
 
   function prompt_last_command() {
-    local last_cmd label_color text_color
+    local last_cmd label_color text_color marker='  ->'
+    if (( HISTCMD <= P9K_LAST_CMD_INITIAL_HISTCMD )); then
+      p10k segment -b 234 -f 208 -i "%F{${P9K_LAST_CMD_LABEL_COLOR}}%BUCE%b%f %F{117}%f%F{208}${marker}%f"
+      return
+    fi
+
+    marker='  ->>'
     last_cmd=$(fc -ln -1 2>/dev/null)
     [[ -n $last_cmd ]] || return
 
@@ -1699,12 +1715,12 @@
     label_color=${P9K_LAST_CMD_LABEL_COLOR}
     text_color=${P9K_LAST_CMD_TEXT_COLOR}
 
-    p10k segment -f 250 -i "%F{${label_color}}Ultimo comando Ejecutado:%f " -t "%F{${text_color}}${last_cmd}%f"
+    p10k segment -b 234 -f 208 -i "%F{${label_color}}%BUCE%b%f %F{117}%f%F{208}${marker}%f " -t "%F{${text_color}}${last_cmd}%f"
   }
 
   # Proxmox version segment.
   typeset -g P9K_PROXMOX_VERSION_LABEL_COLOR=214
-  typeset -g P9K_PROXMOX_VERSION_TEXT_COLOR=45
+  typeset -g P9K_PROXMOX_VERSION_TEXT_COLOR=208
 
   function prompt_proxmox_version() {
     local pvever
@@ -1721,7 +1737,47 @@
     pvever_num=${pvever_num%%/*}
     pvever_num=${pvever_num%%-*}
 
-    p10k segment -f 220 -t " %F{${P9K_PROXMOX_VERSION_TEXT_COLOR}}${pvebase}:%f ${pvever_num}"
+    p10k segment -b 234 -f 117 -t " %F{${P9K_PROXMOX_VERSION_TEXT_COLOR}}${pvebase}:%f %F{255}${pvever_num}%f"
+  }
+
+  # Revisa el índice local de APT cada 10 minutos; no ejecuta `apt update` ni instala paquetes.
+  typeset -gi P9K_PROXMOX_UPDATES_CACHE_AT=0
+  typeset -gi P9K_PROXMOX_UPDATES_COUNT=0
+  typeset -gi P9K_PROXMOX_UPDATES_CACHE_TTL=600
+  zmodload zsh/datetime
+  function prompt_proxmox_updates() {
+    local now=$EPOCHSECONDS
+    if (( now - P9K_PROXMOX_UPDATES_CACHE_AT >= P9K_PROXMOX_UPDATES_CACHE_TTL )); then
+      P9K_PROXMOX_UPDATES_COUNT=$(apt list --upgradable 2>/dev/null | awk 'NR > 1 && NF {count++} END {print count + 0}')
+      P9K_PROXMOX_UPDATES_CACHE_AT=$now
+    fi
+    if (( P9K_PROXMOX_UPDATES_COUNT > 0 )); then
+      p10k segment -b 234 -f 255 -i '%F{208}󰏔%f' -t " \"%F{208}Actualizaciones pendientes:%f %F{255}${P9K_PROXMOX_UPDATES_COUNT}%f\""
+    else
+      p10k segment -b 234 -f 76 -i '%F{76}󰏔%f' -t " \"%F{76}Todo actualizado%f\""
+    fi
+  }
+  typeset -g POWERLEVEL9K_PROXMOX_UPDATES_LEFT_WHITESPACE='  '
+  function instant_prompt_proxmox_updates() { :; }
+
+  function prompt_network_rate() {
+    local text=
+    [[ -n $P9K_IP_RX_RATE ]] && text+="%70F󱐋↓ ${P9K_IP_RX_RATE}%f "
+    [[ -n $P9K_IP_TX_RATE ]] && text+="%215F󱐋↑ ${P9K_IP_TX_RATE}%f"
+    [[ -n $text ]] || return
+    p10k segment -b 234 -f 255 -t "$text"
+  }
+  function instant_prompt_network_rate() { :; }
+
+  # Espejo visual de `╰─❯` en el extremo derecho: `❮─╯`.
+  typeset -g POWERLEVEL9K_RIGHT_MARKER_RIGHT_PROMPT_FIRST_SEGMENT_START_SYMBOL=
+  typeset -g POWERLEVEL9K_RIGHT_MARKER_RIGHT_PROMPT_LAST_SEGMENT_END_SYMBOL=
+  typeset -g POWERLEVEL9K_RIGHT_MARKER_RIGHT_{LEFT,RIGHT}_WHITESPACE=
+  function prompt_right_marker() {
+    p10k segment -f 76 -t '❮'
+  }
+  function instant_prompt_right_marker() {
+    prompt_right_marker
   }
 
   # Example of a user-defined prompt segment. Function prompt_example will be called on every
