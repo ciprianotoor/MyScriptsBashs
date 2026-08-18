@@ -242,12 +242,6 @@ exec zsh
 - Repositorio: <https://github.com/ciprianotoor/MyScriptsBashs>
 - GitHub SSH: <https://docs.github.com/en/authentication/connecting-to-github-with-ssh>
 
-## 🧩 Recursos Proxmox relacionados
-
-- [Proxmox VE Helper-Scripts](https://github.com/community-scripts/ProxmoxVE)
-- [Portal de documentación de Helper-Scripts](https://community-scripts.org/docs)
-- [Repositorio de desarrollo de Helper-Scripts](https://github.com/community-scripts/ProxmoxVED)
-
 ## ⚠️ Disclaimer
 
 Estos scripts se proporcionan para uso personal y administrativo bajo tu
