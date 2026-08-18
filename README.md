@@ -197,3 +197,13 @@ el archivo `.pub`.
 
 - Repositorio: <https://github.com/ciprianotoor/MyScriptsBashs>
 - GitHub SSH: <https://docs.github.com/en/authentication/connecting-to-github-with-ssh>
+
+## ⚠️ Disclaimer
+
+Estos scripts se proporcionan para uso personal y administrativo bajo tu
+propia responsabilidad. Pueden requerir `sudo` y algunos modifican discos,
+redes, servicios, máquinas virtuales, contenedores o configuraciones críticas
+de Proxmox. El autor no garantiza que funcionen en todos los entornos ni se
+hace responsable por pérdida de datos, interrupciones, daños en el sistema o
+configuraciones incorrectas. Revisa el código, confirma los dispositivos y
+realiza backups verificables antes de ejecutar operaciones sensibles.
