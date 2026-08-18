@@ -65,7 +65,7 @@ log "Verificando dependencias del host Proxmox..."
 "${SUDO[@]}" apt-get install -y --no-install-recommends \
   git zsh curl nano less lsd fzf bat tree tmux openssh-client \
   iproute2 iputils-ping procps util-linux hostname debianutils \
-  gawk sed grep coreutils timeshift
+  gawk sed grep coreutils timeshift smartmontools tty-clock
 
 mkdir -p "$ZSH_DIR/plugins"
 clone_or_update https://github.com/romkatv/powerlevel10k.git "$ZSH_DIR/powerlevel10k"

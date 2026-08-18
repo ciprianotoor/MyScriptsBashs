@@ -15,7 +15,8 @@ acciones:
 
    `git`, `zsh`, `curl`, `nano`, `less`, `lsd`, `fzf`, `bat`, `tree`, `tmux`,
    `openssh-client`, `iproute2`, `iputils-ping`, `procps`, `util-linux`,
-   `hostname`, `debianutils`, `gawk`, `sed`, `grep`, `coreutils` y `timeshift`.
+   `hostname`, `debianutils`, `gawk`, `sed`, `grep`, `coreutils`, `timeshift` y
+   `smartmontools` y `tty-clock`.
 
 2. Descarga o actualiza estos plugins en `~/.zsh/`:
 
@@ -91,7 +92,7 @@ push_my_scripts          # sincronizar cambios con GitHub
 ```
 
 También están disponibles los aliases para VMs/LXC, red, SSH, logs, APT,
-tmux, Timeshift, Git y herramientas de diagnóstico.
+tmux, Timeshift, Git, `r.sh` (reloj de terminal) y herramientas de diagnóstico.
 
 ## Sincronización con GitHub
 
