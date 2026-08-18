@@ -125,8 +125,8 @@ LXC           listar_lxc, lxc_iniciar, lxc_detener, lxc_reiniciar
               lxc_configurar
 Cluster       almacenamiento_estado, nodos_cluster, estado_cluster
 ZFS           zfs_backup_v1, zfs_backup_v2
-Terminal      recargar_zsh, aliasesrc, reload_alias, tmux_nuevo
-              tmux_conectar, tmux_sesiones, tmux_cerrar
+Terminal      recargar_zsh, aliasesrc, reload_alias
+Tmux          tmux_iniciar, tmux_entrar, tmux_listar, tmux_cerrar
 Git           gs, ga, gaa, gc, gp, gpl
 Scripts       montar, r, disk_health, backup-promox-config
               install-proxmox, update-my-scripts, push_my_scripts
@@ -287,10 +287,14 @@ alias tn='tmux new -s trabajo'
 alias ta='tmux attach -t trabajo'
 alias tls='tmux ls'
 alias tk='tmux kill-session -t trabajo'
-alias tmux_nuevo='tmux new -s trabajo'
-alias tmux_conectar='tmux attach -t trabajo'
-alias tmux_sesiones='tmux ls'
+alias tmux_iniciar='tmux new-session -A -s trabajo'
+alias tmux_entrar='tmux attach-session -t trabajo'
+alias tmux_listar='tmux list-sessions'
 alias tmux_cerrar='tmux kill-session -t trabajo'
+# Nombres anteriores conservados por compatibilidad.
+alias tmux_nuevo='tmux_iniciar'
+alias tmux_conectar='tmux_entrar'
+alias tmux_sesiones='tmux_listar'
 
 # ========================
 # SSH ADMIN

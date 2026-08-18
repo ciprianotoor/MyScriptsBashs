@@ -129,6 +129,15 @@ Los nombres descriptivos (`listar_vms`, `vm_iniciar`, `listar_lxc`,
 Se conservan los nombres cortos antiguos (`vms`, `vmstart`, `cts`, `mip`,
 `pvev`, etc.) para no romper hábitos ni scripts existentes.
 
+Para tmux se recomienda esta secuencia lógica:
+
+```bash
+tmux_iniciar   # crea o conecta a la sesión trabajo
+tmux_entrar    # entra a una sesión existente
+tmux_listar    # lista las sesiones
+tmux_cerrar    # cierra la sesión trabajo
+```
+
 ## 🔐 Configurar SSH entre Proxmox y GitHub
 
 Ejecuta estos pasos con el usuario propietario del repositorio:
