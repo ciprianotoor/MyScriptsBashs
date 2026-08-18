@@ -144,7 +144,7 @@ alias cluster='sudo pvecm status'
 # ========================
 # APT
 # ========================
-alias actualiza='sudo apt update'
+alias actualiza='sudo apt update && sudo apt upgrade -y '
 alias actualizar='sudo apt full-upgrade -y'
 alias autoremove='sudo apt autoremove -y'
 alias cleanapt='sudo apt clean'
