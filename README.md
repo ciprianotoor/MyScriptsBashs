@@ -252,7 +252,7 @@ hace responsable por pérdida de datos, interrupciones, daños en el sistema o
 configuraciones incorrectas. Revisa el código, confirma los dispositivos y
 realiza backups verificables antes de ejecutar operaciones sensibles.
 
-## ❓ Preguntas frecuentes
+##  Preguntas frecuentes ?
 
 ### ¿Funciona fuera de Proxmox?
 
