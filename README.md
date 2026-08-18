@@ -75,8 +75,10 @@ MyScriptsBashs/
 └── README.md
 ```
 
-Los demás scripts se pueden ejecutar directamente desde el repositorio. Los
-aliases se generan automáticamente para los archivos `*.sh` de esta carpeta.
+Los demás scripts se pueden ejecutar directamente desde el repositorio. Al
+cargar `aliases.sh`, se genera automáticamente un alias para cada archivo
+`*.sh` de esta carpeta; cada alias ejecuta el script mediante Bash, incluso si
+el archivo no tiene el bit ejecutable.
 Los comandos `qm`, `pct`, `pveversion`, `pvesm` y `pvecm` son propios de
 Proxmox VE y no se instalan mediante APT adicional.
 
@@ -87,12 +89,19 @@ Después de instalar:
 ```bash
 exec zsh                 # recargar la configuración
 aliases                  # buscar aliases con fzf
+aliasesrc                # editar aliases.sh y recargarlo al guardar
+reload_alias             # recargar aliases.sh sin abrir el editor
 consumo                  # resumen de CPU, RAM y disco
+montar                   # herramienta prioritaria de discos y montajes
+r                       # reloj de terminal (tty-clock)
 push_my_scripts          # sincronizar cambios con GitHub
 ```
 
 También están disponibles los aliases para VMs/LXC, red, SSH, logs, APT,
 tmux, Timeshift, Git, `r.sh` (reloj de terminal) y herramientas de diagnóstico.
+
+`aliasesrc` usa la variable `$EDITOR` si está definida; de lo contrario abre
+Nano. Solo recarga la configuración si el editor termina correctamente.
 
 ## Sincronización con GitHub
 
