@@ -32,6 +32,19 @@ setopt HIST_REDUCE_BLANKS
 setopt AUTO_CD
 setopt CORRECT
 
+# ===== RESUMEN PROXMOX =====
+consumo() {
+  local load cores
+  read -r load _ < /proc/loadavg
+  cores=$(getconf _NPROCESSORS_ONLN 2>/dev/null)
+  [[ $cores == <-> ]] || cores=1
+
+  print -P '%F{208}%BResumen de consumo del nodo%b%f'
+  print -P "%F{117}󰍛 CPU%f  carga: %B${load}/${cores}%b"
+  free -h | awk 'NR == 2 {printf "󰍛 RAM  usada: %s / %s (%s disponible)\n", $3, $2, $7}'
+  df -hP / | awk 'NR == 2 {printf "󰋊 Disco /  usado: %s / %s (%s)\n", $3, $2, $5}'
+}
+
 # ===== PLUGINS =====
 source ~/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 # ===== Powerlevel10k =====
@@ -45,3 +58,6 @@ PROMPT='%n@%m:%~ %# '
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+export PATH="$HOME/MyScriptsBashs:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/.local/npm/bin:$PATH"
