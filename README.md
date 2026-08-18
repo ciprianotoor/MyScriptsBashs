@@ -82,6 +82,7 @@ MyScriptsBashs/
 ├── *backup*.sh                 # Respaldos de configuración
 ├── *zfs*.sh                    # Herramientas ZFS
 ├── *PersistentImg*.sh          # Imágenes persistentes
+├── archive/                    # Archivos antiguos conservados
 └── README.md
 ```
 
