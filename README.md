@@ -32,6 +32,8 @@ aliasesrc          # editar aliases.sh y recargarlo al guardar
 edit-readme        # editar y revisar README.md
 TuneoNanoRoot      # copiar .nanorc tuneado al usuario root
 TuneoBashRoot      # copiar .bashrc tuneado al usuario root
+TuneoNanoUser      # aplicar .nanorc al usuario actual
+TuneoBashUser      # aplicar .bashrc al usuario actual
 consumo            # CPU, RAM y disco del nodo
 r                  # reloj de terminal
 push_my_scripts    # sincronizar cambios con GitHub
@@ -79,6 +81,8 @@ MyScriptsBashs/
 ├── edit-readme.sh            # Editor seguro del README
 ├── TuneoNanoRoot.sh           # Configura Nano para root mediante sudo
 ├── TuneoBashRoot.sh           # Configura Bash para root mediante sudo
+├── TuneoNanoUser.sh           # Configura Nano del usuario actual
+├── TuneoBashUser.sh           # Configura Bash del usuario actual
 ├── .zshrc / .p10k.zsh        # Zsh y Powerlevel10k
 ├── .nanorc                   # Configuración de Nano
 ├── push_my_scripts.sh        # Subir cambios a GitHub
@@ -277,6 +281,12 @@ Ejecuta `TuneoBashRoot`. Pide sudo, valida el `.bashrc`, respalda
 `/root/.bashrc` si existe y copia la configuración versionada con permisos
 `600` y propietario `root:root`. Los valores `MY_IP` y `MY_PORT` del archivo
 deben personalizarse antes de usar los aliases SSH.
+
+### ¿Cómo aplico los tuneos al usuario normal?
+
+Ejecuta, sin `sudo`, `TuneoNanoUser` y `TuneoBashUser`. Ambos rechazan la
+ejecución como root, respaldan los archivos existentes y aplican la
+configuración al usuario actual con permisos `600`.
 
 ### ¿Cómo subo mis cambios?
 
