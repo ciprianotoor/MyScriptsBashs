@@ -11,6 +11,16 @@ REMOTE="${PUSH_REMOTE:-git@github.com:ciprianotoor/MyScriptsBashs.git}"
 BRANCH="${PUSH_BRANCH:-main}"
 REPO_URL="${PUSH_REPO_URL:-https://github.com/ciprianotoor/MyScriptsBashs}"
 
+if [[ -t 1 ]]; then
+    GREEN=$'\033[1;32m'; CYAN=$'\033[1;36m'; YELLOW=$'\033[1;33m'; DIM=$'\033[2m'; RESET=$'\033[0m'
+else
+    GREEN=''; CYAN=''; YELLOW=''; DIM=''; RESET=''
+fi
+
+info() { printf '%s%s%s\n' "$CYAN" "$*" "$RESET"; }
+ok() { printf '%s✅ %s%s\n' "$GREEN" "$*" "$RESET"; }
+warn() { printf '%s⚠ %s%s\n' "$YELLOW" "$*" "$RESET"; }
+
 # --------------------------------------------------
 # SSH Agent
 # --------------------------------------------------
@@ -31,7 +41,7 @@ ensure_ssh_agent() {
         fi
 
     else
-        echo "❌ No existe la clave SSH: $KEY"
+            printf '%s❌ No existe la clave SSH: %s%s\n' "$YELLOW" "$KEY" "$RESET"
         exit 1
     fi
 }
@@ -44,14 +54,14 @@ ensure_ssh_agent() {
 ensure_repo() {
 
     if [ ! -d "$REPO_DIR" ]; then
-        echo "❌ No existe $REPO_DIR"
+        printf '%s❌ No existe %s%s\n' "$YELLOW" "$REPO_DIR" "$RESET"
         exit 1
     fi
 
     cd "$REPO_DIR"
 
     if [ ! -d ".git" ]; then
-        echo "📦 Inicializando repositorio..."
+        info '📦 Inicializando repositorio...'
         git init -q
         git remote add origin "$REMOTE"
     fi
@@ -83,24 +93,26 @@ sync_changes() {
         -q
 
 
-        echo "📥 Actualizando remoto..."
+        info '📥 Actualizando remoto...'
 
         if ! git pull --rebase origin "$BRANCH"; then
-            echo "❌ No se pudo actualizar desde el remoto; revisa el conflicto antes de continuar."
+            printf '%s❌ No se pudo actualizar desde el remoto; revisa el conflicto antes de continuar.%s\n' "$YELLOW" "$RESET"
             exit 1
         fi
 
 
-        echo "📤 Enviando cambios..."
+        info '📤 Enviando cambios...'
 
         git push -u origin "$BRANCH"
 
 
-        echo "✅ Sincronizado: $TIMESTAMP"
+        ok "Sincronizado: $TIMESTAMP"
 
     else
 
-        echo "🟢 Todo actualizado. Nada que enviar."
+        ok 'Todo actualizado. Nada que enviar.'
+        printf '%sPuedes abrir el repositorio aquí: %s%s\n' "$DIM" "$REPO_URL" "$RESET"
+        printf '%sPara abrirlo desde la terminal: xdg-open %q%s\n' "$DIM" "$REPO_URL" "$RESET"
 
     fi
 }
@@ -112,8 +124,9 @@ sync_changes() {
 
 show_repo() {
 
-    echo "🌐 Repo:"
-    echo "$REPO_URL"
+    printf '%s🌐 Repositorio: %s%s\n' "$CYAN" "$RESET" "$RESET"
+    # OSC 8 crea un enlace clicable en terminales que lo soportan.
+    printf '\033]8;;%s\a%s%s%s\033]8;;\a\n' "$REPO_URL" "$CYAN" "$REPO_URL" "$RESET"
 
 }
 
