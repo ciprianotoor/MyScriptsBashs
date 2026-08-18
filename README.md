@@ -8,18 +8,6 @@
 ![Estado](https://img.shields.io/badge/estado-activo-2ea44f)
 ![Licencia](https://img.shields.io/badge/licencia-personal-lightgrey)
 
-## 📌 Ficha del proyecto
-
-| Dato | Valor |
-|---|---|
-| **Autor** | Cipriano Javier Perez Garcia |
-| **Proyecto** | MyScriptsBashs · Proxmox Toolkit |
-| **Entorno objetivo** | Proxmox VE sobre Debian |
-| **Última modificación** | 18 de agosto de 2026 |
-| **Repositorio** | `github.com/ciprianotoor/MyScriptsBashs` |
-| **Instalador** | `install-proxmox.sh` |
-| **Sincronización** | `push_my_scripts.sh` mediante SSH |
-
 > 🟠 **Importante:** el instalador está diseñado para un host Proxmox VE. No es
 > un instalador genérico de Debian ni un instalador para Termux/Android.
 
@@ -191,6 +179,18 @@ el archivo `.pub`.
 - No guardes claves, códigos 2FA ni contraseñas en el repositorio.
 - Mantén la clave SSH con permisos restrictivos y passphrase.
 - Haz un backup antes de modificar configuraciones del nodo.
+
+## 📌 Información del proyecto
+
+| Dato | Valor |
+|---|---|
+| **Autor** | Cipriano Javier Perez Garcia |
+| **Proyecto** | MyScriptsBashs · Proxmox Toolkit |
+| **Entorno objetivo** | Proxmox VE sobre Debian |
+| **Última modificación** | 18 de agosto de 2026 |
+| **Repositorio** | `github.com/ciprianotoor/MyScriptsBashs` |
+| **Instalador** | `install-proxmox.sh` |
+| **Sincronización** | `push_my_scripts.sh` mediante SSH |
 
 ## 🔗 Enlaces
 
