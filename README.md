@@ -1,54 +1,47 @@
 # MyScriptsBashs
 
-## 👤 Autor
-**Cipriano Javier Perez Garcia**
+Colección de scripts Bash y configuración de terminal para administrar un host
+**Proxmox VE**. El repositorio también incluye un instalador reproducible para
+que otro usuario pueda clonar el proyecto y obtener el mismo entorno de Zsh,
+Powerlevel10k, aliases y Nano.
 
-## 📅 Fecha
-13 de junio de 2026  
+## Qué instala `install-proxmox.sh`
 
-## ⏰
+El instalador solo continúa si detecta Proxmox VE (`/etc/pve/.version` o
+`pveversion`). Ejecutado desde el usuario que usará la terminal, realiza estas
+acciones:
 
-Repositorio de scripts Bash desarrollados para **automatizar tareas en Proxmox** y facilitar la gestión de archivos y sincronización con GitHub.
+1. Instala con APT las dependencias usadas por `aliases.sh`:
 
-## 📂 Contenido
+   `git`, `zsh`, `curl`, `nano`, `less`, `lsd`, `fzf`, `bat`, `tree`, `tmux`,
+   `openssh-client`, `iproute2`, `iputils-ping`, `procps`, `util-linux`,
+   `hostname`, `debianutils`, `gawk`, `sed`, `grep`, `coreutils` y `timeshift`.
 
-* `MyScriptsBashs/`
+2. Descarga o actualiza estos plugins en `~/.zsh/`:
 
-  * Scripts de automatización de tareas.
-  * Script principal: `push_my_scripts.sh` — detecta cambios, hace commit y push a GitHub automáticamente.
-* `install-proxmox.sh` — instala el entorno en un host Proxmox VE y enlaza los dotfiles.
+   - Powerlevel10k
+   - zsh-autosuggestions
+   - zsh-syntax-highlighting
+   - zsh-completions
 
----
+3. Enlaza los archivos versionados del repositorio:
 
-## ⚡ Funcionalidades principales
+   ```text
+   ~/.zshrc    -> <repositorio>/.zshrc
+   ~/.p10k.zsh -> <repositorio>/.p10k.zsh
+   ~/.nanorc   -> <repositorio>/.nanorc
+   ```
 
-1. **`push_my_scripts.sh`**
+   De esta forma no hay dos configuraciones activas. Los archivos existentes
+   se conservan como `*.backup-AAAAmmdd-HHMMSS` antes de crear los enlaces.
 
-   * Detecta cambios en la carpeta de scripts.
-   * Hace commit automático con un timestamp.
-   * Hace push al repositorio remoto en GitHub vía SSH.
-   * Se puede ejecutar manualmente o integrarse como tarea de cron o VS Code.
+El instalador no sobrescribe `/root/.bashrc`, no cambia la configuración de
+red y no ejecuta acciones sobre máquinas virtuales o contenedores.
 
-2. **Gestión de scripts Bash**
+## Instalación
 
-   * Cualquier script agregado a la carpeta puede sincronizarse con GitHub.
-   * Permite trabajar directamente en Proxmox vía SSH o VS Code remoto.
-
----
-
-## 🚀 Requisitos
-
-* Proxmox VE con acceso SSH.
-* Git instalado.
-* Clave SSH pública agregada a GitHub.
-* Una cuenta de usuario con `sudo`.
-
-## 🧰 Instalación en Proxmox
-
-El instalador es específico para el host Proxmox y no se ejecuta en Debian genérico ni en Termux.
-Realiza una copia fechada de los archivos existentes, instala Git/Zsh/Nano y los plugins de Zsh,
-y enlaza `.zshrc`, `.p10k.zsh` y `.nanorc` desde el repositorio. Así, la configuración tuneada de
-Nano y Powerlevel10k queda versionada en una sola ubicación.
+Requisitos: Proxmox VE, una cuenta con `sudo` y acceso a Internet para APT y
+GitHub.
 
 ```bash
 git clone https://github.com/ciprianotoor/MyScriptsBashs.git
@@ -57,37 +50,65 @@ cd MyScriptsBashs
 exec zsh
 ```
 
----
+El script puede ejecutarse desde cualquier ruta; no presupone que el repositorio
+esté en `~/MyScriptsBashs`. Para usar `push_my_scripts.sh`, la cuenta debe tener
+una clave SSH autorizada para el repositorio de GitHub.
 
-## 💻 Uso
+## Estructura
 
-### Ejecutar el script de sincronización:
-
-```bash
-cd ~/MyScriptsBashs
-./push_my_scripts.sh
+```text
+MyScriptsBashs/
+├── install-proxmox.sh          # Instalador del entorno Proxmox
+├── push_my_scripts.sh          # Commit y push automático por SSH
+├── aliases.sh                  # Alias y funciones cargados por Zsh
+├── .zshrc                      # Configuración principal de Zsh
+├── .p10k.zsh                   # Tema y segmentos de Powerlevel10k
+├── .nanorc                     # Configuración personalizada de Nano
+├── lxc-admin.sh                # Administración de contenedores LXC
+├── administrarVMLXC.sh         # Menú de VMs y contenedores
+├── AuditoriaProxmoxVE.sh       # Auditoría del nodo
+├── proxmox_security_audit.sh   # Revisión de seguridad
+├── *backup*.sh                 # Respaldos de configuración
+├── *zfs*.sh                    # Herramientas para ZFS
+├── *PersistentImg*.sh          # Imágenes persistentes
+└── README.md
 ```
 
-* Detecta cambios, hace commit y push.
-* Mensajes en terminal indican el estado: archivos agregados, commits y push exitoso.
+Los demás scripts se pueden ejecutar directamente desde el repositorio. Los
+aliases se generan automáticamente para los archivos `*.sh` de esta carpeta.
+Los comandos `qm`, `pct`, `pveversion`, `pvesm` y `pvecm` son propios de
+Proxmox VE y no se instalan mediante APT adicional.
 
-### Integración opcional
+## Uso diario
 
-* Ejecutar automáticamente al guardar archivos con **VS Code**.
-* Configurar como tarea en **cron** para sincronización periódica.
+Después de instalar:
 
----
+```bash
+exec zsh                 # recargar la configuración
+aliases                  # buscar aliases con fzf
+consumo                  # resumen de CPU, RAM y disco
+push_my_scripts          # sincronizar cambios con GitHub
+```
 
-## 📝 Buenas prácticas
+También están disponibles los aliases para VMs/LXC, red, SSH, logs, APT,
+tmux, Timeshift, Git y herramientas de diagnóstico.
 
-* Guardar los scripts directamente en `/home/cipriano/MyScriptsBashs`.
-* Probar scripts nuevos primero en un entorno de prueba.
-* Mantener la clave SSH segura y con passphrase si es necesario.
+## Sincronización con GitHub
 
----
-
-## 🔗 Repositorio remoto
+`push_my_scripts.sh` calcula automáticamente la carpeta donde está instalado,
+añade todos los cambios, crea un commit con fecha, actualiza `main` mediante
+rebase y hace push al remoto SSH:
 
 ```text
 git@github.com:ciprianotoor/MyScriptsBashs.git
 ```
+
+Si el rebase encuentra conflictos, el script se detiene para que se resuelvan
+manualmente; no oculta el error.
+
+## Notas de seguridad
+
+- Revisa cada script antes de ejecutarlo con `sudo`.
+- No guardes claves, códigos 2FA ni contraseñas en el repositorio.
+- Mantén la clave SSH con permisos restrictivos y, preferiblemente, passphrase.
+- Prueba scripts de discos, ZFS, backups y apagado en un entorno controlado.
