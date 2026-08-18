@@ -55,6 +55,68 @@ El script puede ejecutarse desde cualquier ruta; no presupone que el repositorio
 esté en `~/MyScriptsBashs`. Para usar `push_my_scripts.sh`, la cuenta debe tener
 una clave SSH autorizada para el repositorio de GitHub.
 
+## Configurar SSH entre Proxmox y GitHub
+
+Estos pasos permiten que `push_my_scripts.sh` haga `commit` y `push` sin pedir
+contraseña de GitHub. Ejecútalos con el usuario propietario del repositorio,
+no necesariamente como `root`.
+
+### 1. Crear una clave en Proxmox
+
+```bash
+sudo apt install -y git openssh-client
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
+ssh-keygen -t ed25519 -C "proxmox-git-$(hostname)" -f ~/.ssh/id_ed25519
+chmod 600 ~/.ssh/id_ed25519
+chmod 644 ~/.ssh/id_ed25519.pub
+```
+
+Se recomienda proteger la clave con una passphrase.
+
+### 2. Añadir la clave pública a GitHub
+
+```bash
+cat ~/.ssh/id_ed25519.pub
+```
+
+En GitHub abre **Settings → SSH and GPG keys → New SSH key**, pega el contenido
+completo y guarda la clave.
+
+### 3. Probar la conexión
+
+```bash
+ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+chmod 644 ~/.ssh/known_hosts
+ssh -T git@github.com
+```
+
+GitHub confirmará la autenticación, pero indicará que no ofrece una shell
+interactiva; ese resultado es normal.
+
+### 4. Configurar el remoto y el agente SSH
+
+```bash
+git remote set-url origin git@github.com:TU_USUARIO/TU_REPOSITORIO.git
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+git config --global user.name "Tu nombre"
+git config --global user.email "tu-correo@example.com"
+```
+
+Para usar `push_my_scripts.sh` con otro repositorio sin editar el script:
+
+```bash
+export PUSH_SSH_KEY="$HOME/.ssh/id_ed25519"
+export PUSH_REMOTE="git@github.com:TU_USUARIO/TU_REPOSITORIO.git"
+export PUSH_BRANCH="main"
+export PUSH_REPO_URL="https://github.com/TU_USUARIO/TU_REPOSITORIO"
+push_my_scripts
+```
+
+La clave privada nunca debe subirse al repositorio; solo se registra en GitHub
+el archivo `.pub`.
+
 ## Estructura
 
 ```text

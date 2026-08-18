@@ -6,10 +6,10 @@ set -euo pipefail
 # ==================================================
 
 REPO_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
-KEY="$HOME/.ssh/id_ed25519"
-REMOTE="git@github.com:ciprianotoor/MyScriptsBashs.git"
-BRANCH="main"
-REPO_URL="https://github.com/ciprianotoor/MyScriptsBashs"
+KEY="${PUSH_SSH_KEY:-$HOME/.ssh/id_ed25519}"
+REMOTE="${PUSH_REMOTE:-git@github.com:ciprianotoor/MyScriptsBashs.git}"
+BRANCH="${PUSH_BRANCH:-main}"
+REPO_URL="${PUSH_REPO_URL:-https://github.com/ciprianotoor/MyScriptsBashs}"
 
 # --------------------------------------------------
 # SSH Agent
