@@ -87,9 +87,22 @@ sync_changes() {
     if ! git diff --cached --quiet; then
 
         TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
+        COMMIT_MESSAGE="Auto-commit Proxmox admin: $TIMESTAMP"
+
+        printf '%s\n' 'Cambios preparados:'
+        git diff --cached --stat
+        if [[ -t 0 ]]; then
+            read -r -p '¿Desea agregar algún comentario al commit? [s/N]: ' ADD_COMMENT
+            if [[ "$ADD_COMMENT" =~ ^[Ss]$ ]]; then
+                read -r -p 'Comentario: ' COMMENT
+                if [[ -n "$COMMENT" ]]; then
+                    COMMIT_MESSAGE="Auto-commit Proxmox admin: $COMMENT"
+                fi
+            fi
+        fi
 
         git commit \
-        -m "Auto-commit Proxmox admin: $TIMESTAMP" \
+        -m "$COMMIT_MESSAGE" \
         -q
 
 

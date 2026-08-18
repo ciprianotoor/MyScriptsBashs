@@ -166,6 +166,11 @@ commit fechado, actualiza `main` mediante rebase y hace push por SSH.
 push_my_scripts
 ```
 
+Cuando se ejecuta desde una terminal, muestra el resumen de cambios y pregunta
+si deseas añadir un comentario personalizado al commit. Responder `n` o pulsar
+Enter conserva el mensaje automático; en ejecuciones no interactivas utiliza
+automáticamente ese mismo mensaje.
+
 Para usarlo con otro repositorio:
 
 ```bash
