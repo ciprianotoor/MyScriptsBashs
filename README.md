@@ -13,7 +13,7 @@
 
 ---
 
-## ⚡ Inicio rápido
+## ⚡  // Inicio rápido \\
 
 ```bash
 git clone https://github.com/ciprianotoor/MyScriptsBashs.git
@@ -29,6 +29,7 @@ montar             # herramienta prioritaria de discos y montajes
 aliases            # buscador visual de aliases con fzf
 aliashelp          # ayuda organizada por categorías
 aliasesrc          # editar aliases.sh y recargarlo al guardar
+edit-readme        # editar y revisar README.md
 consumo            # CPU, RAM y disco del nodo
 r                  # reloj de terminal
 push_my_scripts    # sincronizar cambios con GitHub
@@ -73,6 +74,7 @@ acciones sobre VMs o contenedores.
 MyScriptsBashs/
 ├── install-proxmox.sh        # Instalación del entorno
 ├── aliases.sh                # Aliases y funciones de Zsh
+├── edit-readme.sh            # Editor seguro del README
 ├── .zshrc / .p10k.zsh        # Zsh y Powerlevel10k
 ├── .nanorc                   # Configuración de Nano
 ├── push_my_scripts.sh        # Subir cambios a GitHub
@@ -254,6 +256,11 @@ host Proxmox.
 
 Usa `aliasesrc`. Abre `aliases.sh` con Nano o `$EDITOR` y recarga los cambios
 automáticamente al cerrar el editor.
+
+### ¿Cómo edito el README?
+
+Ejecuta `edit-readme`. Usa `$EDITOR` o Nano, detecta marcadores de conflicto y
+muestra si quedan cambios pendientes para `push_my_scripts`.
 
 ### ¿Cómo subo mis cambios?
 
