@@ -11,7 +11,13 @@
 > 🟠 **Importante:** el instalador está diseñado para un host Proxmox VE. No es
 > un instalador genérico de Debian ni un instalador para Termux/Android.
 
+<<<<<<< HEAD
 ## ⚡  ## Inicio rápido
+=======
+<br>
+
+## ⚡&nbsp;&nbsp;Inicio rápido
+>>>>>>> ac0f276 (Auto-commit Proxmox admin: 2026-08-18 15:56:57)
 
 ```bash
 git clone https://github.com/ciprianotoor/MyScriptsBashs.git
