@@ -1,15 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# ==================================================
 # Sincronización automática GitHub - Proxmox admin
-# ==================================================
-
 REPO_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
 KEY="${PUSH_SSH_KEY:-$HOME/.ssh/id_ed25519}"
 REMOTE="${PUSH_REMOTE:-git@github.com:ciprianotoor/MyScriptsBashs.git}"
 BRANCH="${PUSH_BRANCH:-main}"
 REPO_URL="${PUSH_REPO_URL:-https://github.com/ciprianotoor/MyScriptsBashs}"
+SCRIPT_NAME=$(basename "$0")
 
 if [[ -t 1 ]]; then
     GREEN=$'\033[1;32m'; CYAN=$'\033[1;36m'; YELLOW=$'\033[1;33m'; DIM=$'\033[2m'; RESET=$'\033[0m'
@@ -19,147 +17,103 @@ fi
 
 info() { printf '%s%s%s\n' "$CYAN" "$*" "$RESET"; }
 ok() { printf '%s✅ %s%s\n' "$GREEN" "$*" "$RESET"; }
-warn() { printf '%s⚠ %s%s\n' "$YELLOW" "$*" "$RESET"; }
-
-# --------------------------------------------------
-# SSH Agent
-# --------------------------------------------------
+die() { printf '%s❌ %s%s\n' "$YELLOW" "$*" "$RESET" >&2; exit 1; }
 
 ensure_ssh_agent() {
-
-    CURRENT_USER=${USER:-$(id -un)}
-    if [ -z "${SSH_AUTH_SOCK:-}" ] || ! pgrep -u "$CURRENT_USER" ssh-agent >/dev/null; then
+    local current_user key_hash
+    current_user=${USER:-$(id -un)}
+    if [[ -z "${SSH_AUTH_SOCK:-}" || ! -S "$SSH_AUTH_SOCK" ]] || \
+       ! pgrep -u "$current_user" -x ssh-agent >/dev/null 2>&1; then
         eval "$(ssh-agent -s)" >/dev/null
     fi
-
-    if [ -f "$KEY" ]; then
-
-        KEY_HASH=$(ssh-keygen -lf "$KEY" | awk '{print $2}')
-
-        if ! ssh-add -l 2>/dev/null | grep -q "$KEY_HASH"; then
-            ssh-add "$KEY" >/dev/null 2>&1
-        fi
-
-    else
-            printf '%s❌ No existe la clave SSH: %s%s\n' "$YELLOW" "$KEY" "$RESET"
-        exit 1
+    [[ -f "$KEY" ]] || die "No existe la clave SSH: $KEY"
+    key_hash=$(ssh-keygen -lf "$KEY" -E sha256 | awk '{print $2}') || die 'No se pudo leer la clave SSH'
+    if ! ssh-add -l 2>/dev/null | awk '{print $2}' | grep -Fxq "$key_hash"; then
+        ssh-add "$KEY" >/dev/null || die "No se pudo cargar la clave SSH: $KEY"
     fi
 }
-
-
-# --------------------------------------------------
-# Preparar repositorio
-# --------------------------------------------------
 
 ensure_repo() {
-
-    if [ ! -d "$REPO_DIR" ]; then
-        printf '%s❌ No existe %s%s\n' "$YELLOW" "$REPO_DIR" "$RESET"
-        exit 1
-    fi
-
+    [[ -d "$REPO_DIR" ]] || die "No existe $REPO_DIR"
     cd "$REPO_DIR"
-
-    if [ ! -d ".git" ]; then
+    if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
         info '📦 Inicializando repositorio...'
         git init -q
+    fi
+    if git remote get-url origin >/dev/null 2>&1; then
+        git remote set-url origin "$REMOTE"
+    else
         git remote add origin "$REMOTE"
     fi
-
-
-    git config user.name "cipriano"
-    git config user.email "cipriano@users.noreply.github.com"
-
+    git config user.name "${PUSH_GIT_USER_NAME:-cipriano}"
+    git config user.email "${PUSH_GIT_USER_EMAIL:-cipriano@users.noreply.github.com}"
+    if ! git show-ref --verify --quiet "refs/heads/$BRANCH"; then
+        git switch -c "$BRANCH" 2>/dev/null || git branch -m "$BRANCH"
+    elif [[ "$(git branch --show-current)" != "$BRANCH" ]]; then
+        git switch "$BRANCH" || die "No se pudo cambiar a la rama $BRANCH"
+    fi
 }
 
-
-# --------------------------------------------------
-# Sincronizar
-# --------------------------------------------------
-
 sync_changes() {
-
+    local rebase_merge rebase_apply timestamp commit_message add_comment comment remote_branch behind ahead
     cd "$REPO_DIR"
-
-    REBASE_MERGE=$(git rev-parse --git-path rebase-merge)
-    REBASE_APPLY=$(git rev-parse --git-path rebase-apply)
-    if [[ -d "$REBASE_MERGE" || -d "$REBASE_APPLY" ]]; then
-        if [[ -z "$(git status --porcelain)" ]]; then
+    rebase_merge=$(git rev-parse --git-path rebase-merge)
+    rebase_apply=$(git rev-parse --git-path rebase-apply)
+    if [[ -d "$rebase_merge" || -d "$rebase_apply" ]]; then
+        if [[ -z "$(git diff --name-only --diff-filter=U)" ]]; then
             info '🔄 Finalizando un rebase interrumpido...'
-            GIT_EDITOR=true git rebase --continue
+            GIT_EDITOR=true git -c core.editor=true rebase --continue
         else
-            printf '%s❌ Hay un rebase pendiente con cambios o conflictos.%s\n' "$YELLOW" "$RESET"
-            printf '%sResuélvelo y ejecuta: git rebase --continue%s\n' "$DIM" "$RESET"
+            die "Hay un rebase pendiente con conflictos. Resuélvelo y ejecuta el rebase antes de reintentar."
+        fi
+    fi
+
+    # Actualiza referencias remotas incluso cuando no hay cambios locales.
+    remote_branch=false
+    if git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
+        remote_branch=true
+        git fetch --quiet origin "$BRANCH" || die 'No se pudo consultar el remoto'
+    fi
+
+    git add --all
+    if ! git diff --cached --quiet; then
+        timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+        commit_message="Auto-commit Proxmox admin: $timestamp"
+        printf '%s\n' 'Cambios preparados:'
+        git diff --cached --stat
+        if [[ -t 0 ]]; then
+            read -r -p '¿Desea agregar algún comentario al commit? [s/N]: ' add_comment
+            if [[ "$add_comment" =~ ^[Ss]$ ]]; then
+                read -r -p 'Comentario: ' comment
+                [[ -n "$comment" ]] && commit_message="Auto-commit Proxmox admin: $comment"
+            fi
+        fi
+        git commit -m "$commit_message" -q
+    fi
+
+    if [[ "$remote_branch" == true ]]; then
+        if ! git rebase "origin/$BRANCH"; then
+            printf '%sResuelve el conflicto y vuelve a ejecutar el script.%s\n' "$DIM" "$RESET"
             return 1
         fi
     fi
 
-    git add --all
-
-
-    if ! git diff --cached --quiet; then
-
-        TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
-        COMMIT_MESSAGE="Auto-commit Proxmox admin: $TIMESTAMP"
-
-        printf '%s\n' 'Cambios preparados:'
-        git diff --cached --stat
-        if [[ -t 0 ]]; then
-            read -r -p '¿Desea agregar algún comentario al commit? [s/N]: ' ADD_COMMENT
-            if [[ "$ADD_COMMENT" =~ ^[Ss]$ ]]; then
-                read -r -p 'Comentario: ' COMMENT
-                if [[ -n "$COMMENT" ]]; then
-                    COMMIT_MESSAGE="Auto-commit Proxmox admin: $COMMENT"
-                fi
-            fi
+    if git rev-parse --verify HEAD >/dev/null 2>&1 && [[ "$remote_branch" == true ]]; then
+        read -r behind ahead < <(git rev-list --left-right --count "origin/$BRANCH...HEAD")
+        if [[ "$behind" == 0 && "$ahead" == 0 ]]; then
+            ok 'Todo actualizado. Nada que enviar.'
+            return
         fi
-
-        git commit \
-        -m "$COMMIT_MESSAGE" \
-        -q
-
-
-        info '📥 Actualizando remoto...'
-
-        if ! git pull --rebase origin "$BRANCH"; then
-            printf '%s❌ No se pudo actualizar desde el remoto; revisa el conflicto antes de continuar.%s\n' "$YELLOW" "$RESET"
-            exit 1
-        fi
-
-
-        info '📤 Enviando cambios...'
-
-        git push -u origin "$BRANCH"
-
-
-        ok "Sincronizado: $TIMESTAMP"
-
-    else
-
-        ok 'Todo actualizado. Nada que enviar.'
-        printf '%sPuedes abrir el repositorio aquí: %s%s\n' "$DIM" "$REPO_URL" "$RESET"
-        printf '%sPara abrirlo desde la terminal: xdg-open %q%s\n' "$DIM" "$REPO_URL" "$RESET"
-
     fi
+    info '📤 Enviando cambios...'
+    git push -u origin "$BRANCH"
+    ok 'Sincronizado correctamente.'
 }
-
-
-# --------------------------------------------------
-# Mostrar repo
-# --------------------------------------------------
 
 show_repo() {
-
     printf '%s🌐 Repositorio: %s%s\n' "$CYAN" "$RESET" "$RESET"
-    # OSC 8 crea un enlace clicable en terminales que lo soportan.
     printf '\033]8;;%s\a%s%s%s\033]8;;\a\n' "$REPO_URL" "$CYAN" "$REPO_URL" "$RESET"
-
 }
-
-
-# --------------------------------------------------
-# Ejecución
-# --------------------------------------------------
 
 ensure_ssh_agent
 ensure_repo
