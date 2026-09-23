@@ -29,7 +29,7 @@ ensure_ssh_agent() {
     [[ -f "$KEY" ]] || die "No existe la clave SSH: $KEY"
     key_hash=$(ssh-keygen -lf "$KEY" -E sha256 | awk '{print $2}') || die 'No se pudo leer la clave SSH'
     if ! ssh-add -l 2>/dev/null | awk '{print $2}' | grep -Fxq "$key_hash"; then
-        ssh-add "$KEY" >/dev/null || die "No se pudo cargar la clave SSH: $KEY"
+        ssh-add "$KEY" >/dev/null 2>&1 || die "No se pudo cargar la clave SSH: $KEY"
     fi
 }
 
@@ -55,7 +55,7 @@ ensure_repo() {
 }
 
 sync_changes() {
-    local rebase_merge rebase_apply timestamp commit_message add_comment comment remote_branch behind ahead
+    local rebase_merge rebase_apply timestamp commit_message comment remote_branch behind ahead
     cd "$REPO_DIR"
     rebase_merge=$(git rev-parse --git-path rebase-merge)
     rebase_apply=$(git rev-parse --git-path rebase-apply)
@@ -79,15 +79,13 @@ sync_changes() {
     if ! git diff --cached --quiet; then
         timestamp=$(date '+%Y-%m-%d %H:%M:%S')
         commit_message="Auto-commit Proxmox admin: $timestamp"
-        printf '%s\n' 'Cambios preparados:'
+        printf '%s\n' '📝 Cambios detectados:'
         git diff --cached --stat
-        if [[ -t 0 ]]; then
-            read -r -p '¿Desea agregar algún comentario al commit? [s/N]: ' add_comment
-            if [[ "$add_comment" =~ ^[Ss]$ ]]; then
-                read -r -p 'Comentario: ' comment
-                [[ -n "$comment" ]] && commit_message="Auto-commit Proxmox admin: $comment"
-            fi
+        comment=${PUSH_COMMIT_COMMENT:-}
+        if [[ -z "$comment" && "${PUSH_ASK_COMMIT_COMMENT:-0}" == 1 && -t 0 ]]; then
+            read -r -p '💬 Comentario opcional (Enter para continuar): ' comment
         fi
+        [[ -n "$comment" ]] && commit_message="Auto-commit Proxmox admin: $comment"
         git commit -m "$commit_message" -q
     fi
 
