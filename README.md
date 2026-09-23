@@ -11,6 +11,25 @@
 > 🟠 **Importante:** el instalador está diseñado para un host Proxmox VE. No es
 > un instalador genérico de Debian ni un instalador para Termux/Android.
 
+## 🎯 ¿Para quién es?
+
+Este toolkit está pensado para administradores de **Proxmox Virtual Environment
+(Proxmox VE)** que gestionan uno o varios nodos desde la terminal. Reúne una
+interfaz Zsh personalizada y scripts Bash para tareas habituales de:
+
+- nodos Proxmox VE y su configuración local;
+- máquinas virtuales, contenedores LXC y almacenamiento;
+- discos, ZFS, backups y consumo de recursos;
+- sincronización segura de la configuración con GitHub.
+
+Los comandos `qm`, `pct`, `pvesm`, `pvecm` y `pveversion` pertenecen al
+ecosistema de Proxmox VE. El proyecto los utiliza, pero no reemplaza la
+interfaz web ni pretende administrar remotamente un clúster por sí solo.
+
+La identidad visual del proyecto sigue la estética de Proxmox: naranja para la
+marca y acciones principales, mensajes compactos de terminal y advertencias
+visibles antes de cualquier operación sensible.
+
 ---
 
 ## ⚡  // Inicio rápido \\

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Sincronización automática GitHub - Proxmox admin
+# Sincronización segura de scripts para Proxmox VE
 REPO_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
 KEY="${PUSH_SSH_KEY:-$HOME/.ssh/id_ed25519}"
 REMOTE="${PUSH_REMOTE:-git@github.com:ciprianotoor/MyScriptsBashs.git}"
@@ -10,10 +10,18 @@ REPO_URL="${PUSH_REPO_URL:-https://github.com/ciprianotoor/MyScriptsBashs}"
 LOCK_FILE="${XDG_RUNTIME_DIR:-/tmp}/push_my_scripts.${UID:-$(id -u)}.lock"
 
 if [[ -t 1 ]]; then
-    GREEN=$'\033[1;32m'; CYAN=$'\033[1;36m'; YELLOW=$'\033[1;33m'; DIM=$'\033[2m'; RESET=$'\033[0m'
+    ORANGE=$'\033[38;5;208m'; GREEN=$'\033[1;32m'; CYAN=$'\033[1;36m'; YELLOW=$'\033[1;33m'; DIM=$'\033[2m'; RESET=$'\033[0m'
 else
-    GREEN=''; CYAN=''; YELLOW=''; DIM=''; RESET=''
+    ORANGE=''; GREEN=''; CYAN=''; YELLOW=''; DIM=''; RESET=''
 fi
+
+header() {
+    [[ -t 1 ]] || return 0
+    printf '%s╭────────────────────────────────────────────╮%s\n' "$ORANGE" "$RESET"
+    printf '%s│  Proxmox VE · MyScriptsBashs               │%s\n' "$ORANGE" "$RESET"
+    printf '%s│  Sincronización segura de configuración    │%s\n' "$ORANGE" "$RESET"
+    printf '%s╰────────────────────────────────────────────╯%s\n' "$ORANGE" "$RESET"
+}
 
 info() { printf '%s%s%s\n' "$CYAN" "$*" "$RESET"; }
 ok() { printf '%s✅ %s%s\n' "$GREEN" "$*" "$RESET"; }
@@ -84,14 +92,14 @@ sync_changes() {
     git add --all
     if ! git diff --cached --quiet; then
         timestamp=$(date '+%Y-%m-%d %H:%M:%S')
-        commit_message="Auto-commit Proxmox admin: $timestamp"
+        commit_message="Proxmox VE: sincronización automática $timestamp"
         printf '%s\n' '📝 Cambios detectados:'
         git diff --cached --stat
         comment=${PUSH_COMMIT_COMMENT:-}
         if [[ -z "$comment" && "${PUSH_ASK_COMMIT_COMMENT:-0}" == 1 && -t 0 ]]; then
             read -r -p '💬 Comentario opcional (Enter para continuar): ' comment
         fi
-        [[ -n "$comment" ]] && commit_message="Auto-commit Proxmox admin: $comment"
+        [[ -n "$comment" ]] && commit_message="Proxmox VE: $comment"
         git commit -m "$commit_message" -q
     fi
 
@@ -122,6 +130,7 @@ show_repo() {
     fi
 }
 
+header
 acquire_lock
 ensure_ssh_agent
 ensure_repo
