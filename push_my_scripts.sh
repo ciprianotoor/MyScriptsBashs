@@ -7,7 +7,7 @@ KEY="${PUSH_SSH_KEY:-$HOME/.ssh/id_ed25519}"
 REMOTE="${PUSH_REMOTE:-git@github.com:ciprianotoor/MyScriptsBashs.git}"
 BRANCH="${PUSH_BRANCH:-main}"
 REPO_URL="${PUSH_REPO_URL:-https://github.com/ciprianotoor/MyScriptsBashs}"
-SCRIPT_NAME=$(basename "$0")
+LOCK_FILE="${XDG_RUNTIME_DIR:-/tmp}/push_my_scripts.${UID:-$(id -u)}.lock"
 
 if [[ -t 1 ]]; then
     GREEN=$'\033[1;32m'; CYAN=$'\033[1;36m'; YELLOW=$'\033[1;33m'; DIM=$'\033[2m'; RESET=$'\033[0m'
@@ -18,6 +18,12 @@ fi
 info() { printf '%s%s%s\n' "$CYAN" "$*" "$RESET"; }
 ok() { printf '%s✅ %s%s\n' "$GREEN" "$*" "$RESET"; }
 die() { printf '%s❌ %s%s\n' "$YELLOW" "$*" "$RESET" >&2; exit 1; }
+
+acquire_lock() {
+    command -v flock >/dev/null 2>&1 || die 'El comando flock no está instalado'
+    exec 9>"$LOCK_FILE" || die "No se pudo crear el bloqueo: $LOCK_FILE"
+    flock -n 9 || die 'Ya hay otra sincronización en curso'
+}
 
 ensure_ssh_agent() {
     local current_user key_hash
@@ -48,7 +54,7 @@ ensure_repo() {
     git config user.name "${PUSH_GIT_USER_NAME:-cipriano}"
     git config user.email "${PUSH_GIT_USER_EMAIL:-cipriano@users.noreply.github.com}"
     if ! git show-ref --verify --quiet "refs/heads/$BRANCH"; then
-        git switch -c "$BRANCH" 2>/dev/null || git branch -m "$BRANCH"
+        git switch -c "$BRANCH" || die "No se pudo crear la rama $BRANCH"
     elif [[ "$(git branch --show-current)" != "$BRANCH" ]]; then
         git switch "$BRANCH" || die "No se pudo cambiar a la rama $BRANCH"
     fi
@@ -104,15 +110,19 @@ sync_changes() {
         fi
     fi
     info '📤 Enviando cambios...'
-    git push -u origin "$BRANCH"
+    git push -u origin "$BRANCH" || die 'No se pudieron enviar los cambios al repositorio'
     ok 'Sincronizado correctamente.'
 }
 
 show_repo() {
-    printf '%s🌐 Repositorio: %s%s\n' "$CYAN" "$RESET" "$RESET"
-    printf '\033]8;;%s\a%s%s%s\033]8;;\a\n' "$REPO_URL" "$CYAN" "$REPO_URL" "$RESET"
+    if [[ -t 1 ]]; then
+        printf '%s🌐 Repositorio: \033]8;;%s\a%s%s\033]8;;\a\n' "$CYAN" "$REPO_URL" "$REPO_URL" "$RESET"
+    else
+        printf '🌐 Repositorio: %s\n' "$REPO_URL"
+    fi
 }
 
+acquire_lock
 ensure_ssh_agent
 ensure_repo
 sync_changes

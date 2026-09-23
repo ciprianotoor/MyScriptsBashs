@@ -176,16 +176,25 @@ es normal y confirma que la autenticación funcionó.
 ## 📤 Sincronizar con `push_my_scripts.sh`
 
 El script calcula la carpeta real donde está instalado, añade cambios, crea un
-commit fechado, actualiza `main` mediante rebase y hace push por SSH.
+commit fechado, actualiza `main` mediante rebase y hace push por SSH. También
+evita ejecuciones simultáneas para proteger el repositorio.
 
 ```bash
 push_my_scripts
 ```
 
-Cuando se ejecuta desde una terminal, muestra el resumen de cambios y pregunta
-si deseas añadir un comentario personalizado al commit. Responder `n` o pulsar
-Enter conserva el mensaje automático; en ejecuciones no interactivas utiliza
-automáticamente ese mismo mensaje.
+Cuando detecta cambios, muestra el resumen y crea el commit automáticamente con
+un mensaje fechado. Para añadir un comentario personalizado, usa:
+
+```bash
+PUSH_COMMIT_COMMENT="Ajuste de configuración SSH" push_my_scripts
+```
+
+También puedes activar el modo interactivo para solicitar el comentario:
+
+```bash
+PUSH_ASK_COMMIT_COMMENT=1 push_my_scripts
+```
 
 Para usarlo con otro repositorio:
 
