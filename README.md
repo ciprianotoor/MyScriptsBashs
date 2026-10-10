@@ -11,6 +11,24 @@
 > 🟠 **Importante:** el instalador está diseñado para un host Proxmox VE. No es
 > un instalador genérico de Debian ni un instalador para Termux/Android.
 
+## Índice
+
+- [¿Para quién es?](#para-quién-es)
+- [Inicio rápido](#inicio-rápido)
+- [Qué instala el instalador](#qué-instala-install-proxmoxsh)
+- [Estructura del repositorio](#estructura-del-repositorio)
+- [Aliases y configuración de terminal](#aliases-y-configuración-de-terminal)
+  - [Consultar el contexto de GitHub Copilot CLI](#consultar-el-contexto-de-github-copilot-cli)
+  - [Exportar y aplicar políticas de firewall](#exportar-y-aplicar-políticas-de-firewall)
+- [Configurar SSH entre Proxmox y GitHub](#configurar-ssh-entre-proxmox-y-github)
+- [Sincronizar cambios con GitHub](#sincronizar-con-push_my_scriptssh)
+- [Actualizar desde GitHub](#actualizar-desde-github)
+- [Seguridad y buenas prácticas](#seguridad-y-buenas-prácticas)
+- [Información del proyecto](#información-del-proyecto)
+- [Enlaces](#enlaces)
+- [Disclaimer](#disclaimer)
+- [Preguntas frecuentes](#preguntas-frecuentes)
+
 ## 🎯 ¿Para quién es?
 
 Este toolkit está pensado para administradores de **Proxmox Virtual Environment
@@ -361,7 +379,7 @@ hace responsable por pérdida de datos, interrupciones, daños en el sistema o
 configuraciones incorrectas. Revisa el código, confirma los dispositivos y
 realiza backups verificables antes de ejecutar operaciones sensibles.
 
-##  Preguntas frecuentes ?
+## Preguntas frecuentes
 
 ### ¿Funciona fuera de Proxmox?
 
