@@ -69,7 +69,7 @@ safe_bundle_path() {
 
 export_policies() {
   local requested_dir=${1:-"$HOME/proxmox-firewall-policy-$(date +%Y%m%d-%H%M%S)"}
-  local bundle guest_dir node_dir node_name guest_id guest_index=0
+  local bundle guest_dir node_dir node_name guest_id guest_index=0 policy_file
   local has_cluster=0 has_host=0 network_count
 
   require_proxmox
@@ -158,11 +158,15 @@ HAS_HOST=$has_host
 GUEST_COUNT=$guest_index
 NETWORK_COUNT=$network_count
 EOF
-  chmod 600 "$bundle"/cluster.fw "$bundle"/host.fw "$bundle"/networks.txt \
-    "$bundle"/manifest "$bundle"/.INCOMPLETE 2>/dev/null || true
+  chmod 600 "$bundle/.INCOMPLETE" "$bundle/manifest" "$bundle/networks.txt"
+  for policy_file in "$bundle"/cluster.fw "$bundle"/host.fw; do
+    [[ -f $policy_file ]] && chmod 600 -- "$policy_file"
+  done
   if [[ -d $guest_dir ]]; then
     chmod 700 "$guest_dir"
-    chmod 600 "$guest_dir"/*.fw
+    for policy_file in "$guest_dir"/*.fw; do
+      chmod 600 -- "$policy_file"
+    done
   fi
   rm -- "$bundle/.INCOMPLETE"
   EXPORT_BUNDLE=
@@ -425,7 +429,9 @@ WARN
         as_root rm -f -- "${targets[$index]}"
       fi
     done
-    as_root pve-firewall compile >/dev/null 2>&1 || true
+    if ! as_root pve-firewall compile >/dev/null 2>&1; then
+      log "ADVERTENCIA: no se pudo validar la configuración restaurada; verifica el firewall manualmente."
+    fi
     die "Políticas restauradas después de una validación fallida. Respaldo: $backup_dir."
   fi
 
