@@ -110,6 +110,7 @@ MyScriptsBashs/
 ├── lxc-admin.sh              # Contenedores LXC
 ├── administrarVMLXC.sh       # VMs y LXC
 ├── *proxmox*.sh / *zfs*.sh   # Administración del nodo
+├── proxmox-firewall-policy.sh # Exportar/aplicar firewall sanitizado
 ├── *backup*.sh               # Respaldos
 ├── archive/                  # Archivos antiguos, fuera del flujo principal
 └── README.md
@@ -152,6 +153,36 @@ proceso de CLI conocido (`codex`, `openai`, `claude`, `gemini`, `copilot`,
 `aider` u `opencode`) ejecutándose en el sistema, y negro cuando no detecta
 ninguno. La comprobación usa únicamente nombres de procesos y no lee
 argumentos ni credenciales.
+
+### Exportar y aplicar políticas de firewall
+
+`proxmox-firewall-policy` exporta las reglas de firewall de datacenter, nodo y
+VM/CT a un paquete privado, sin exportar usuarios, credenciales, certificados,
+claves SSH ni comentarios. Sustituye IPs y redes por tokens para que el paquete
+no revele esas direcciones. Los nombres de reglas y aliases pueden seguir
+revelando contexto; guarda el paquete de forma privada y no lo publiques.
+
+En el nodo de origen:
+
+```bash
+proxmox-firewall-policy export ~/pve-firewall-sanitizado
+```
+
+Transfiere el directorio por un canal seguro. En el destino:
+
+```bash
+proxmox-firewall-policy apply ~/pve-firewall-sanitizado
+```
+
+El importador solicita el valor destino de cada red anonimizada, muestra el
+diff y solo continúa al escribir `APLICAR`. Guarda un respaldo root-only antes
+de reemplazar reglas, valida la configuración con `pve-firewall compile` y
+restaura los archivos anteriores si la escritura o validación falla. Las
+reglas de VM/CT requieren mapear manualmente cada `guest-NNN` a un VMID del
+destino, por ejemplo `--guest-map guest-001:120`. Solo aplica entre nodos de
+la misma versión mayor de Proxmox VE. Las reglas de datacenter pueden afectar
+a todo el clúster: conserva acceso a consola local/fuera de banda antes de
+aplicar cambios.
 
 `aliasesrc` utiliza `$EDITOR` si está definido y, de lo contrario, abre Nano.
 Solo recarga la configuración si el editor termina correctamente.
