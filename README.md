@@ -18,7 +18,7 @@
 - [Qué instala el instalador](#qué-instala-install-proxmoxsh)
 - [Estructura del repositorio](#estructura-del-repositorio)
 - [Aliases y configuración de terminal](#aliases-y-configuración-de-terminal)
-  - [Consultar el contexto de GitHub Copilot CLI](#consultar-el-contexto-de-github-copilot-cli)
+  - [Mostrar el contexto restante en Copilot CLI](#mostrar-el-contexto-restante-en-copilot-cli)
   - [Exportar y aplicar políticas de firewall](#exportar-y-aplicar-políticas-de-firewall)
 - [Configurar SSH entre Proxmox y GitHub](#configurar-ssh-entre-proxmox-y-github)
 - [Sincronizar cambios con GitHub](#sincronizar-con-push_my_scriptssh)
@@ -167,26 +167,26 @@ montar                   # Discos y montajes
 r                        # Reloj tty-clock
 ```
 
-### Consultar el contexto de GitHub Copilot CLI
+### Mostrar el contexto restante en Copilot CLI
 
-El indicador de contexto pertenece a la interfaz de GitHub Copilot CLI; no es
-un medidor que este repositorio pueda extraer como script independiente. Para
-consultar el uso y la visualización del contexto durante una sesión interactiva,
-ejecuta:
-
-```text
-/context
-```
-
-La barra inferior se puede configurar desde la sesión con:
+Para mostrar el indicador de la ventana de contexto en la barra inferior de
+Copilot CLI, abre una sesión interactiva y ejecuta:
 
 ```text
 /statusline
 ```
 
-Los elementos disponibles dependen de la versión de Copilot CLI. Estos comandos
-no configuran la terminal Zsh ni muestran el contexto fuera de una sesión de
-Copilot.
+Activa **Context window** en la configuración de la barra. También puedes
+habilitarlo desde la terminal, fuera de la sesión:
+
+```bash
+copilot config footer.showContextWindow true
+```
+
+El indicador es parte de Copilot CLI y muestra el contexto de la sesión actual;
+no es un medidor independiente de Zsh ni informa el contexto de otras sesiones.
+Para ver el detalle visual del uso, usa `/context` dentro de Copilot CLI. Las
+opciones y la presentación exacta pueden variar según la versión.
 
 El prompt muestra únicamente el icono de IA: en rojo cuando detecta un
 proceso de CLI conocido (`codex`, `openai`, `claude`, `gemini`, `copilot`,
