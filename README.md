@@ -147,6 +147,12 @@ montar                   # Discos y montajes
 r                        # Reloj tty-clock
 ```
 
+El prompt muestra únicamente el icono de IA: en rojo cuando detecta un
+proceso de CLI conocido (`codex`, `openai`, `claude`, `gemini`, `copilot`,
+`aider` u `opencode`) ejecutándose en el sistema, y negro cuando no detecta
+ninguno. La comprobación usa únicamente nombres de procesos y no lee
+argumentos ni credenciales.
+
 `aliasesrc` utiliza `$EDITOR` si está definido y, de lo contrario, abre Nano.
 Solo recarga la configuración si el editor termina correctamente.
 

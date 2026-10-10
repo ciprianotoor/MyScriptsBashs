@@ -117,6 +117,7 @@
     # =========================[ Line #2 ]=========================
      newline                 # \n
      vpn_ip                  # virtual private network indicator
+    ai_status               # indicador de CLI de IA activo
     ip                      # ip address and bandwidth usage for a specified network interface
     newline                 # \n
     network_rate            # velocidad de red
@@ -1768,6 +1769,29 @@
     p10k segment -b 234 -f 255 -t "$text"
   }
   function instant_prompt_network_rate() { :; }
+
+  # Indica si hay un CLI de IA ejecutándose en el sistema, sin leer argumentos ni credenciales.
+  function prompt_ai_status() {
+    local processes process
+    processes=$(ps -eo comm=) || {
+      print -u2 'ai_status: no se pudo consultar la lista de procesos'
+      return 1
+    }
+
+    for process in ${(f)processes}; do
+      if [[ $process == (codex|openai|claude|gemini|copilot|aider|opencode) ]]; then
+        p10k segment -f 196 -i '󰚩'
+        return
+      fi
+    done
+
+    p10k segment -f 0 -i '󰚩'
+  }
+
+  function instant_prompt_ai_status() {
+    prompt_ai_status
+  }
+  typeset -g POWERLEVEL9K_AI_STATUS_ICON_BEFORE_CONTENT=true
 
   # Espejo visual de `╰─❯` en el extremo derecho: `❮─╯`.
   typeset -g POWERLEVEL9K_RIGHT_MARKER_RIGHT_PROMPT_FIRST_SEGMENT_START_SYMBOL=
