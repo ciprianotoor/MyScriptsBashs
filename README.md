@@ -149,6 +149,27 @@ montar                   # Discos y montajes
 r                        # Reloj tty-clock
 ```
 
+### Consultar el contexto de GitHub Copilot CLI
+
+El indicador de contexto pertenece a la interfaz de GitHub Copilot CLI; no es
+un medidor que este repositorio pueda extraer como script independiente. Para
+consultar el uso y la visualización del contexto durante una sesión interactiva,
+ejecuta:
+
+```text
+/context
+```
+
+La barra inferior se puede configurar desde la sesión con:
+
+```text
+/statusline
+```
+
+Los elementos disponibles dependen de la versión de Copilot CLI. Estos comandos
+no configuran la terminal Zsh ni muestran el contexto fuera de una sesión de
+Copilot.
+
 El prompt muestra únicamente el icono de IA: en rojo cuando detecta un
 proceso de CLI conocido (`codex`, `openai`, `claude`, `gemini`, `copilot`,
 `aider` u `opencode`) ejecutándose en el sistema, y negro cuando no detecta
