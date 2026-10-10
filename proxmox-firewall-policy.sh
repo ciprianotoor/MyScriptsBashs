@@ -137,7 +137,8 @@ for path in files:
     for line in text.splitlines():
         if line.lstrip().startswith("#"):
             continue
-        line = re.sub(r'\s+comment(?:=|\s+)(?:"[^"]*"|\S+)', "", line, flags=re.IGNORECASE)
+        line = re.sub(r'\s+comment(?:=|\s+).*$', "", line, flags=re.IGNORECASE)
+        line = re.sub(r'\s+#.*$', "", line)
         line = ipv4.sub(redact_address, line)
         line = ipv6.sub(redact_address, line)
         output.append(line.rstrip())
@@ -437,7 +438,7 @@ WARN
 
   log "Políticas aplicadas y compiladas correctamente."
   log "Respaldo protegido del destino: $backup_dir"
-  rmdir -- "$work_dir"
+  cleanup_export
   APPLY_WORK_DIR=
   trap - EXIT
 }

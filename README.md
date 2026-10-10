@@ -57,6 +57,7 @@ consumo            # CPU, RAM y disco del nodo
 r                  # reloj de terminal
 push_my_scripts    # sincronizar cambios con GitHub
 update-my-scripts  # descargar cambios desde GitHub
+proxmox-firewall-policy # exportar/aplicar firewall sanitizado
 ```
 
 ## 🧰 Qué instala `install-proxmox.sh`
@@ -157,10 +158,14 @@ argumentos ni credenciales.
 ### Exportar y aplicar políticas de firewall
 
 `proxmox-firewall-policy` exporta las reglas de firewall de datacenter, nodo y
-VM/CT a un paquete privado, sin exportar usuarios, credenciales, certificados,
-claves SSH ni comentarios. Sustituye IPs y redes por tokens para que el paquete
-no revele esas direcciones. Los nombres de reglas y aliases pueden seguir
-revelando contexto; guarda el paquete de forma privada y no lo publiques.
+VM/CT a un directorio privado. No exporta usuarios, credenciales, certificados
+ni claves SSH; anonimiza direcciones IP y elimina comentarios. Los nombres de
+reglas, aliases, interfaces y otros valores de configuración pueden revelar
+contexto, así que guarda el paquete de forma privada y no lo publiques.
+
+El comando requiere ejecutarse en un nodo Proxmox VE con `python3`. La
+exportación no modifica las reglas del origen y rechaza guardar el paquete
+dentro del repositorio Git.
 
 En el nodo de origen:
 
@@ -168,21 +173,39 @@ En el nodo de origen:
 proxmox-firewall-policy export ~/pve-firewall-sanitizado
 ```
 
-Transfiere el directorio por un canal seguro. En el destino:
+Transfiere el directorio por un canal seguro y aplica únicamente paquetes que
+tú mismo hayas exportado; el paquete contiene reglas ejecutables por el
+firewall y no se firma criptográficamente. En el destino, que debe tener la
+misma versión mayor de Proxmox VE:
 
 ```bash
 proxmox-firewall-policy apply ~/pve-firewall-sanitizado
 ```
 
-El importador solicita el valor destino de cada red anonimizada, muestra el
-diff y solo continúa al escribir `APLICAR`. Guarda un respaldo root-only antes
-de reemplazar reglas, valida la configuración con `pve-firewall compile` y
-restaura los archivos anteriores si la escritura o validación falla. Las
-reglas de VM/CT requieren mapear manualmente cada `guest-NNN` a un VMID del
-destino, por ejemplo `--guest-map guest-001:120`. Solo aplica entre nodos de
-la misma versión mayor de Proxmox VE. Las reglas de datacenter pueden afectar
-a todo el clúster: conserva acceso a consola local/fuera de banda antes de
-aplicar cambios.
+El importador pregunta por cada red anonimizada. Los nombres de interfaz
+(`-iface`) se conservan; si el destino usa nombres distintos, edita los
+archivos del paquete antes de importarlos. Revisa el diff y solo continúa si
+escribes `APLICAR`. Antes de reemplazar reglas, guarda respaldos protegidos
+por root y valida la configuración con `pve-firewall compile`; intenta
+restaurar los archivos previos si falla la escritura o la validación. Verifica
+el estado del firewall y la conectividad después de aplicar.
+
+Las reglas de VM/CT se exportan como `guest-NNN`, sin conservar los VMID del
+origen. Cada regla debe asociarse explícitamente con un VM o CT existente en
+el destino, por ejemplo:
+
+```bash
+proxmox-firewall-policy apply ~/pve-firewall-sanitizado \
+  --guest-map guest-001:120 \
+  --guest-map guest-002:121
+```
+
+El script no aplica automáticamente políticas de otros servicios ni migra
+usuarios/ACL, configuración de SSH, certificados, reglas externas al firewall,
+configuración de red del host o servicios. Las reglas de datacenter pueden
+afectar a todo el clúster y las del nodo pueden bloquear el acceso remoto:
+conserva acceso a consola local/fuera de banda y un respaldo reciente antes
+de confirmar.
 
 `aliasesrc` utiliza `$EDITOR` si está definido y, de lo contrario, abre Nano.
 Solo recarga la configuración si el editor termina correctamente.
